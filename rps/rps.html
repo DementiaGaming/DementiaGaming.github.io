@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="RPSstyle.css">
+</head>
+<body>
+    <div id="topBanner">
+        <span id="textBanner">Rock Paper Scissors</span>
+        <button id="homeButton" onclick="window.location.href='../mainPage/index.html';">Home</button>
+    </div>
+    
+    <div class="content">
+        <h1 id="winner">Winner: none </h1>
+        <h1 id="wins">Wins: 0 </h1>
+        <h1 id="losses">Losses: 0 </h1>
+        <button id="rock" onclick="rockSelected()"> Rock </button>
+        <button id="paper" onclick="paperSelected()"> Paper </button>
+        <button id="scissors" onclick="scissorsSelected()"> Scissors </button>
+    </div>
+    <p id="aiChoice"></p>
+    <div id="backgroundPane"> </div>
+    <script src="script.js"></script>
+</body>
+</html>
