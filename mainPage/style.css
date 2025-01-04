@@ -18,3 +18,24 @@
         transition: transform 0.3s;
         transform: translate(-50%, -50%) scale(1.05);
     }
+
+#game1Button {
+    background: red;
+    background-size: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 100px;
+    border-radius: 100px;
+    transform-origin: center;
+    transition: transform 0.3s;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 20px;
+}
+
+    #game1Button:hover {
+        transition: transform 0.3s;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
