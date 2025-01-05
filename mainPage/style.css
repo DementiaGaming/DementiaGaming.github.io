@@ -1,5 +1,9 @@
+body {
+    background: black;
+}
+
 #rpsButton {
-    background: red;
+    background-color: hsl(214, 100%, 50%);
     background-size: 100px;
     position: absolute;
     top: 30%;
@@ -20,7 +24,7 @@
     }
 
 #orbDefenderButton {
-    background: red;
+    background-color: hsl(214, 100%, 50%);
     background-size: 100px;
     position: absolute;
     top: 50%;
