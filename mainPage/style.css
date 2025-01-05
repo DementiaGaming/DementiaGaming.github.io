@@ -19,7 +19,7 @@
         transform: translate(-50%, -50%) scale(1.05);
     }
 
-#game1Button {
+#orbDefenderButton {
     background: red;
     background-size: 100px;
     position: absolute;
@@ -35,7 +35,7 @@
     font-size: 20px;
 }
 
-    #game1Button:hover {
+    #orbDefenderButton:hover {
         transition: transform 0.3s;
         transform: translate(-50%, -50%) scale(1.05);
     }
