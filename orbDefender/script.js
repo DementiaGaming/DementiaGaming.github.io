@@ -220,6 +220,7 @@ function animate() {
             modalEl.style.display = "flex"
             bigScoreEl.innerHTML = score
             clearInterval(setIntervalID)
+            clearInterval(difficultyIntervalID)
             clearInterval(timerIntervalID)
         }
 
