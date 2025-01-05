@@ -117,6 +117,8 @@ let nextDifficulttyIncrease = 5000
 let miliseconds = 0
 let seconds = 0
 
+let scoreMultiplier = 1.0
+
 function init() {
     player = new Player(x, y, 10, "white") 
     projectiles = []
@@ -129,7 +131,9 @@ function init() {
     timeEl.innerHTML = "0:00"
     score = 0
     scoreEl.innerHTML = score
+    scoreMultiplier = 1.0
     timerIntervalID = setInterval(updateTimer, 10)
+    bonusScoreID = setInterval(addBonusScore, 1000)
     setIntervals()
 }
 
@@ -139,6 +143,7 @@ function setIntervals() {
 }
 
 function updateTimer() {
+    scoreEl.innerHTML = score
     if(miliseconds >= 100) {
         seconds++
         miliseconds = 0
@@ -146,6 +151,47 @@ function updateTimer() {
         miliseconds += 1
     }
     timeEl.innerHTML = `${seconds}:${miliseconds}`
+}
+
+function addBonusScore() {
+    switch (seconds) {
+        case 10:
+            score += 100
+            scoreMultiplier = 1.1
+            break;
+        case 20:
+            score += 250
+            scoreMultiplier = 1.2
+            break;
+        case 30:
+            score += 500
+            scoreMultiplier = 1.3
+            break;
+        case 45:
+            score += 750
+            scoreMultiplier = 1.4
+            break;
+        case 60:
+            score += 1000
+            scoreMultiplier = 2.0
+            break;
+        case 75:
+            score += 1500
+            scoreMultiplier = 2.5
+            break;
+        case 90:
+            score += 2000
+            scoreMultiplier = 3.0
+            break;
+        case 105:
+            score += 2500
+            scoreMultiplier = 4.0
+            break;
+        case 120:
+            score += 5000
+            scoreMultiplier = 5.0
+            break;
+    }
 }
 
 function increaseSpawnSpeed() {
@@ -222,6 +268,7 @@ function animate() {
             clearInterval(setIntervalID)
             clearInterval(difficultyIntervalID)
             clearInterval(timerIntervalID)
+            clearInterval(bonusScoreID)
         }
 
         projectiles.forEach((projectile, projectileIndex) => {
@@ -239,7 +286,7 @@ function animate() {
                 }
 
                 if (enemy.radius - 10 > 5) {
-                    score += 100
+                    score += Math.floor((100 * scoreMultiplier))
                     scoreEl.innerHTML = score
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
@@ -250,7 +297,7 @@ function animate() {
                 }
                 else{
                     setTimeout(() => {
-                        score += 250
+                        score += Math.floor((250 * scoreMultiplier))
                         scoreEl.innerHTML = score
                         enemies.splice(index, 1)
                         projectiles.splice(projectileIndex, 1)
