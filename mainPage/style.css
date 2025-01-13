@@ -6,7 +6,7 @@ body {
     background-color: hsl(214, 100%, 50%);
     background-size: 100px;
     position: absolute;
-    top: 30%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%,-50%);
     width: 500px;
@@ -27,7 +27,7 @@ body {
     background-color: hsl(214, 100%, 50%);
     background-size: 100px;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%,-50%);
     width: 500px;
@@ -40,6 +40,48 @@ body {
 }
 
     #orbDefenderButton:hover {
+        transition: transform 0.3s;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+#gamblecoreButton {
+    background-color: hsl(214, 100%, 50%);
+    background-size: 100px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 100px;
+    border-radius: 100px;
+    transform-origin: center;
+    transition: transform 0.3s;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 20px;
+}
+
+    #gamblecoreButton:hover {
+        transition: transform 0.3s;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+#tdButton {
+    background-color: hsl(214, 100%, 50%);
+    background-size: 100px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 100px;
+    border-radius: 100px;
+    transform-origin: center;
+    transition: transform 0.3s;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 20px;
+}
+
+    #tdButton:hover {
         transition: transform 0.3s;
         transform: translate(-50%, -50%) scale(1.05);
     }

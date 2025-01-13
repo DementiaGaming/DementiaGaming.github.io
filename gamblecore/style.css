@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #222;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.slot-machine {
+    width: 300px;
+    background: #444;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    text-align: center;
+}
+
+.slot-machine .reels {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding: 10px;
+    background: #111;
+    border-radius: 5px;
+}
+
+.slot-machine .reels .reel {
+    width: 80px;
+    height: 80px;
+    background: #333;
+    border: 2px solid #555;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.slot-machine button {
+    background: #ff5722;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.slot-machine button:hover {
+    background: #e64a19;
+}
+
+.slot-machine button:active {
+    background: #bf360c;
+}
+
+.slot-machine button.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.slot-machine .win-indicator {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #ffd700;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.slot-machine .win-indicator.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Winning highlight */
+.reel.win {
+    background-color: #4caf50 !important; /* Green */
+    animation: highlight 1s ease-in-out;
+}
+
+.reel.lose {
+    background-color: #f44336 !important; /* Red */
+    animation: highlight 1s ease-in-out;
+}
+
+.reel.big-win {
+    background-color: #ffd700 !important; /* Gold */
+    animation: highlight 1s ease-in-out;
+}
+
+/* Highlight animation */
+@keyframes highlight {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
