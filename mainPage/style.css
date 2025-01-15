@@ -1,87 +1,76 @@
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Body Styling */
 body {
-    background: black;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
 }
 
-#rpsButton {
-    background-color: hsl(214, 100%, 50%);
-    background-size: 100px;
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    height: 100px;
-    border-radius: 100px;
-    transform-origin: center;
-    transition: transform 0.3s;
-    transform: translate(-50%, -50%) scale(1);
-    font-size: 20px;
+/* Container */
+.container {
+    width: 90%;
+    max-width: 800px;
 }
 
-    #rpsButton:hover {
-        transition: transform 0.3s;
-        transform: translate(-50%, -50%) scale(1.05);
+/* Title Styling */
+.title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #00d9ff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Button Styling */
+button {
+    background: hsl(214, 100%, 50%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    width: 100%;
+    max-width: 500px;
+    padding: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: hsl(214, 100%, 60%);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
     }
 
-#orbDefenderButton {
-    background-color: hsl(214, 100%, 50%);
-    background-size: 100px;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    height: 100px;
-    border-radius: 100px;
-    transform-origin: center;
-    transition: transform 0.3s;
-    transform: translate(-50%, -50%) scale(1);
-    font-size: 20px;
-}
-
-    #orbDefenderButton:hover {
-        transition: transform 0.3s;
-        transform: translate(-50%, -50%) scale(1.05);
+    button {
+        font-size: 1.2rem;
     }
-
-#gamblecoreButton {
-    background-color: hsl(214, 100%, 50%);
-    background-size: 100px;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    height: 100px;
-    border-radius: 100px;
-    transform-origin: center;
-    transition: transform 0.3s;
-    transform: translate(-50%, -50%) scale(1);
-    font-size: 20px;
 }
-
-    #gamblecoreButton:hover {
-        transition: transform 0.3s;
-        transform: translate(-50%, -50%) scale(1.05);
-    }
-
-#tdButton {
-    background-color: hsl(214, 100%, 50%);
-    background-size: 100px;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    height: 100px;
-    border-radius: 100px;
-    transform-origin: center;
-    transition: transform 0.3s;
-    transform: translate(-50%, -50%) scale(1);
-    font-size: 20px;
-}
-
-    #tdButton:hover {
-        transition: transform 0.3s;
-        transform: translate(-50%, -50%) scale(1.05);
-    }
