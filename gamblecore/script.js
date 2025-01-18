@@ -43,11 +43,6 @@ async function spinMachine() {
     slot2 = slotIcons[randomNum]
     randomNum = Math.floor((Math.random() * 7) + 1)
     slot3 = slotIcons[randomNum]
-    
-    spinRandomItemsInMachine()
-    spinRandomItemsInMachine()
-    spinRandomItemsInMachine()
-    spinRandomItemsInMachine()
 
     slot1El.innerHTML = slot1
     await delay(500)
@@ -55,18 +50,6 @@ async function spinMachine() {
     await delay(500)
     slot3El.innerHTML = slot3
     checkWinnings()
-}
-
-async function spinRandomItemsInMachine() {
-    randomNum = Math.floor((Math.random() * 7) + 1)
-    slot1El.innerHTML = slotIcons[randomNum]
-    await delay(250)
-    randomNum = Math.floor((Math.random() * 7) + 1)
-    slot2El.innerHTML = slotIcons[randomNum]
-    await delay(250)
-    randomNum = Math.floor((Math.random() * 7) + 1)
-    slot3El.innerHTML = slotIcons[randomNum]
-    await delay(250)
 }
 
 function checkWinnings() {
@@ -93,15 +76,17 @@ function checkWinnings() {
     }
     else {
         winType = "lose"
+        winAmount = 0
+        loseStreak++
     }
     displayAnimations()
 }
 
 function displayAnimations() {
-    if (winType == "none" && loseStreak < 5) {
+    if (winType == "lose" && loseStreak < 15) {
         loseStreak++
         gambleMessage.innerHTML = "Aw dang it"
-    } else if (winType == "none" && loseStreak > 5) {
+    } else if (winType == "lose" && loseStreak >= 15) {
         gambleMessage.innerHTML = "99% of gamblers quit before they win big"
     }
 
