@@ -21,6 +21,9 @@ body {
 .container {
     width: 90%;
     max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures everything inside is centered */
 }
 
 /* Title Styling */
@@ -36,6 +39,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center; /* Ensures buttons are centered */
+    width: 100%;
 }
 
 /* Button Styling */
@@ -51,6 +56,7 @@ button {
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 button:hover {
