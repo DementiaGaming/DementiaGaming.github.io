@@ -420,7 +420,7 @@ addEventListener("click", (event) => {
 })
 
 addEventListener("touchend", (event) => {
-    const angle = Math.atan2(event.touches[0].clientY - canvas.height / 2, event.touches[0].clientX - canvas.width / 2)
+    const angle = Math.atan2(event.changedTouches[0].clientY - canvas.height / 2, event.touches[0].clientX - canvas.width / 2)
     const speed = {
         x: Math.cos(angle) * 5,
         y: Math.sin(angle) * 5
