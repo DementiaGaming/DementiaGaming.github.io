@@ -39,10 +39,21 @@ class Button {
     }
 
     checkClick(event) {
-        if (event.clientX < this.x + this.size && event.clientX > this.x - this.size)
-            if (event.clientY < this.y + this.size && event.clientY > this.y - this.size)
+        if (event.clientX < this.x + this.size && event.clientX > this.x - this.size) {
+            if (event.clientY < this.y + this.size && event.clientY > this.y - this.size) {
                 score += this.clickAmount * clickMultiplier
                 scoreEl.innerHTML = `$${Math.floor(score)}`
+            }
+        }
+    }
+    
+    checkTouch(event) {
+        if (event.changedTouches[0].clientX < this.x + this.size && event.changedTouches[0].clientX > this.x - this.size) {
+            if (event.changedTouches[0].clientY < this.y + this.size && event.changedTouches[0].clientY > this.y - this.size) {
+                score += this.clickAmount * clickMultiplier
+                scoreEl.innerHTML = `$${Math.floor(score)}`
+            }
+        }
     }
 }
 
@@ -68,6 +79,11 @@ function animate() {
 addEventListener("click", (event) => {
     console.log(event.clientX, event.clientY)
     button.checkClick(event)
+    console.log(score)
+})
+
+addEventListener("touchend", (event) => {
+    button.checkTouch(event)
     console.log(score)
 })
 
