@@ -185,6 +185,7 @@ function init() {
     levelEl.textContent = level;
     damage = 10
     damageIncreaseInterval = 0
+    projectileRadius = 5
     timerIntervalID = setInterval(updateTimer, 10)
     bonusScoreID = setInterval(addBonusScore, 1000)
     setIntervals()
