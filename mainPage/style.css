@@ -126,6 +126,17 @@ button:active {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.date {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.content {
+    text-align: left;
+    display: inline-block;
+}
+
 /* Socials Section - Perfectly Centered Under "What's New" */
 .socials {
     display: flex;
