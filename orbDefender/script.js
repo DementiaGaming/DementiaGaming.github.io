@@ -342,7 +342,7 @@ function animate() {
                     setTimeout(() => {
                         projectiles.splice(projectileIndex, 1)
                     }, 0)
-                    addXP(100)
+                    addXP(10)
                 }
                 else{
                     setTimeout(() => {
@@ -350,7 +350,7 @@ function animate() {
                         scoreEl.innerHTML = score
                         enemies.splice(index, 1)
                         projectiles.splice(projectileIndex, 1)
-                        addXP(200)
+                        addXP(20)
                     }, 0)
                 }
             }
