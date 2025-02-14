@@ -276,6 +276,8 @@ let animationID
 let score = 0
 function animate() {
     animationID = requestAnimationFrame(animate)
+    
+    checkAchievements()
 
     c.fillStyle = "rgba(0, 0, 0, 0.1)"
     c.fillRect(0, 0, canvas.width, canvas.height);
@@ -340,7 +342,7 @@ function animate() {
                     setTimeout(() => {
                         projectiles.splice(projectileIndex, 1)
                     }, 0)
-                    addXP(10)
+                    addXP(100)
                 }
                 else{
                     setTimeout(() => {
@@ -348,7 +350,7 @@ function animate() {
                         scoreEl.innerHTML = score
                         enemies.splice(index, 1)
                         projectiles.splice(projectileIndex, 1)
-                        addXP(20)
+                        addXP(200)
                     }, 0)
                 }
             }
@@ -436,3 +438,63 @@ startGameButton.addEventListener("click", () => {
     animate()
     modalEl.style.display = "none"
 })
+
+let a1 = false
+let a2 = false
+let a3 = false
+let a4 = false
+let a5 = false
+
+function checkAchievements() {
+    if (level >= 10 && !a1) {
+        unlockAchievement("Orb Novice");
+        showAchievementPopup("Orb Novice");
+        a1 = true;
+    }
+    if (level >= 20 && !a2) {
+        unlockAchievement("Orb Apprentice");
+        showAchievementPopup("Orb Apprentice");
+        a2 = true;
+    }
+    if (level >= 30 && !a3) {
+        unlockAchievement("Orb Master");
+        showAchievementPopup("Orb Master");
+        a3 = true;
+    }
+    if (level >= 40 && !a4) {
+        unlockAchievement("Orb Grandmaster");
+        showAchievementPopup("Orb Grandmaster");
+        a4 = true;
+    }
+    if (level >= 50 && !a5) {
+        unlockAchievement("Orb Legend");
+        showAchievementPopup("Orb Legend");
+        a5 = true;
+    }
+}
+
+function showAchievementPopup(achievementName) {
+    console.log("Trying to show popup for:", achievementName); // Should log correctly
+
+    if (!achievementName) {
+        console.error("⚠️ ERROR: achievementName is undefined!");
+        return;
+    }
+
+    const popup = document.getElementById("achievement-popup");
+    const text = document.getElementById("achievement-text");
+
+    if (!popup || !text) {
+        console.error("⚠️ ERROR: Popup elements not found!");
+        return;
+    }
+
+    text.innerText = `Achievement Unlocked: ${achievementName}`;
+    popup.classList.add("show");
+
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 3000);
+}
+
+

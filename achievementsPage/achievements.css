@@ -1,0 +1,96 @@
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+}
+
+h1 {
+    color: #00d9ff;
+    margin-bottom: 15px;
+}
+
+.achievements-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.achievements {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 48%;
+    text-align: left;
+}
+
+.achievements h2 {
+    text-align: center;
+    color: #00d9ff;
+}
+
+.achievements-list {
+    list-style: none;
+    padding: 0;
+}
+
+.achievements-list li {
+    background: #243b55;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-weight: normal;
+}
+
+button {
+    background: hsl(214, 100%, 50%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: hsl(214, 100%, 60%);
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .achievements-sections {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .achievements {
+        width: 100%;
+    }
+}

@@ -52,6 +52,10 @@ async function spinMachine() {
     checkWinnings()
 }
 
+let a1 = false;
+let a2 = false;
+let a3 = false;
+
 function checkWinnings() {
     if (slot1 == "💎" && slot2 == "💎" && slot3 == "💎") {
         winAmount = 1000
@@ -59,6 +63,11 @@ function checkWinnings() {
         winType = "big-win"
         loseStreak = 0
         gambleMessage.innerHTML = "You win big!"
+        unlockAchievement("Big Winner");
+        if (!a2) {
+            showAchievementPopup("Big Winner");
+            a2 = true;
+        }
     }
     else if(slot1 == "⭐" && slot2 == "⭐" && slot3 == "⭐") {
         winAmount = 500
@@ -73,6 +82,11 @@ function checkWinnings() {
         winType = "win"
         loseStreak = 0
         gambleMessage.innerHTML = "You win!"
+        unlockAchievement("Winner");
+        if (!a1) {
+            showAchievementPopup("Winner");
+            a1 = true;
+        }
     }
     else {
         winType = "lose"
@@ -103,6 +117,12 @@ function displayAnimations() {
     });
 
     spinButton.classList.remove('disabled');
+
+    if (money <= 0 && !a3) {
+        unlockAchievement("All In, All Gone");
+        showAchievementPopup("All In, All Gone");
+        a3 = true;
+    }
 }
 
 spinButton.addEventListener('click', () => {
@@ -112,3 +132,27 @@ spinButton.addEventListener('click', () => {
     });
     spinMachine()
 });
+
+function showAchievementPopup(achievementName) {
+    console.log("Trying to show popup for:", achievementName); // Should log correctly
+
+    if (!achievementName) {
+        console.error("⚠️ ERROR: achievementName is undefined!");
+        return;
+    }
+
+    const popup = document.getElementById("achievement-popup");
+    const text = document.getElementById("achievement-text");
+
+    if (!popup || !text) {
+        console.error("⚠️ ERROR: Popup elements not found!");
+        return;
+    }
+
+    text.innerText = `Achievement Unlocked: ${achievementName}`;
+    popup.classList.add("show");
+
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 3000);
+}
