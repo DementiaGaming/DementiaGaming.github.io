@@ -13,6 +13,25 @@
     <div class="fixed text-black font-bold top-1 right-2 select-none">
         <span id="roundCounter">Round: 1 </span><span id="money">Money: 0 </span><span id="lives">Lives: 100</span>
     </div>
+    <div class="ui-container">
+        <!-- Description Box -->
+        <div class="description-box" id="descriptionBox">
+            Hover over a button to see details!
+        </div>
+
+        <!-- Upgrade Buttons -->
+        <div class="upgrade-container">
+            <button class="upgrade-button" id="upgradeSpeedT1"
+            onmouseover="updateDescription('Increases the attack speed of tower 1')"
+            onmouseout="resetDescription()">$200</button>
+            <button class="upgrade-button" id="upgradeDamageT1"
+            onmouseover="updateDescription('Increases the damage of tower 1')"
+            onmouseout="resetDescription()">$200</button>
+            <button class="upgrade-button" id="upgradeAccuracyT1"
+            onmouseover="updateDescription('Increases the accuracy of tower 1')"
+            onmouseout="resetDescription()">$200</button>
+        </div>
+    </div>
     <canvas id="canvas"></canvas>
     <script src="script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>

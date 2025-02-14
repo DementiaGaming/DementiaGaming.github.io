@@ -4,6 +4,10 @@ const c = canvas.getContext('2d');
 const livesEl = document.getElementById("lives")
 const roundCounterEl = document.getElementById("roundCounter")
 const moneyEl = document.getElementById("money")
+const roundPromptEl = document.getElementById("roundPrompt")
+const upgradeSpeedT1El = document.getElementById("upgradeSpeedT1")
+const upgradeDamageT1El = document.getElementById("upgradeDamageT1")
+const upgradeAccuracyT1El = document.getElementById("upgradeAccuracyT1")
 
 canvas.width = 1920;
 canvas.height = 1080;
@@ -30,19 +34,40 @@ class Enemy {
 
     draw() {
         c.fillRect(this.xPos,this.yPos,50,50);
+        c.fillStyle = "white"
+        c.fillText(`${this.health}`, this.xPos + 25, this.yPos + 25)
+        c.fillStyle = "black"
+    }
+
+    checkHit() {
+        projectiles.forEach((projectile, index) => {
+            if (this.xPos < projectile.x && this.xPos + 50 > projectile.x) {
+                if (this.yPos < projectile.y && this.yPos + 50> projectile.y) {
+                    this.health -= projectile.damage
+                    money += 5
+                    projectiles.splice(index, 1)
+                    if (this.health <= 0) {
+                        enemies.splice(enemies.indexOf(this), 1)
+                        money += 10
+                    }
+                }
+            }
+        })
     }
 }
 
 class BuildSquares {
-    constructor(cost) {
-        this.xPos = 300
-        this.yPos = 200
+    constructor(x, y, cost, damage) {
+        this.xPos = x
+        this.yPos = y
         this.width = 55
         this.height = 50
         this.buildStatus = "green"
         this.cost = cost // not built
         this.cooldownTime = 1000 // ms
         this.cooldown = false
+        this.damage = damage
+        this.accuracy = 1
     }
 
     draw() {
@@ -51,6 +76,8 @@ class BuildSquares {
         c.fillStyle = "black"
         if (this.buildStatus == "green") {
             c.fillText("$100", 327, 225)
+        } else {
+            c.fillText("1", 327, 225)
         }
     }
 
@@ -69,8 +96,7 @@ class BuildSquares {
     checkEnemiesInRange() {
         if (this.buildStatus == "blue") {
             enemies.forEach((enemy) => {
-                if (enemy.xPos < 400 && enemy.xPos > 200) {
-                    console.log("g")
+                if (enemy.xPos < 500 && enemy.xPos > 100) {
                     this.attack()
                 }
             })
@@ -78,24 +104,42 @@ class BuildSquares {
     }
 
     attack() {
-        if (!this.cooldown) {
-            projectiles.push(new Projectile(100, 200, 10, 1))
+        if (!this.cooldown && enemies.length > 0) {
+            let target = enemies.at(0)
+            console.log(target)
+            console.log(target.xPos, target.yPos)
+            const angle = Math.atan2((target.yPos + 25) - this.yPos, (target.xPos + 25) - this.xPos)
+            const speed = {
+                x: Math.cos(angle) * this.accuracy,
+                y: Math.sin(angle) * this.accuracy
+            }
+            projectiles.push(new Projectile(this.xPos + 30, this.yPos + 10, 10, speed, this.damage))
+            console.log(angle)
+            this.cooldown = true
+            this.decreaseCooldown()
         }
+    }
+
+    decreaseCooldown() {
+        setTimeout(() => {
+            this.cooldown = false
+        }, this.cooldownTime)
     }
 }
 
 class Projectile {
-    constructor(x, y, radius, speed) {
+    constructor(x, y, radius, speed, damage) {
         this.x = x
         this.y = y
         this.radius = radius
         this.colour = "red"
         this.speed = speed
+        this.damage = damage
     }
 
     draw() {
         c.beginPath()
-        c.arc(this.x, this.y, this.radius, 0,Math.PI * 2, false)
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.colour
         c.fill()
         c.fillStyle = "black"
@@ -116,11 +160,18 @@ let round = 0
 let enemiesToSpawn = 5
 let enemiesSpawned = 0
 let spawningFinished = true
+let enemyHealthMax = 1
+let maxRoundsWithoutDifficultyIncrease = 5
+let roundsWithoutDifficultyIncrease = 0
 
 let money = 100 
 let lives = 100
 
-let buildSquare1 = new BuildSquares(100)
+let speedUpgradeCostT1 = 200
+let damageUpgradeCostT1 = 200
+let accuracyUpgradeCostT1 = 200
+
+let buildSquare1 = new BuildSquares(300, 200, 100, 1)
 
 function animate() {
     requestAnimationFrame(animate)
@@ -131,16 +182,15 @@ function animate() {
     moneyEl.innerHTML = `Money: $${money} `
     enemies.forEach(enemy => {
         enemy.draw()
+        enemy.checkHit()
     });
-    buildSquare1.draw()
-    buildSquare1.checkEnemiesInRange()
-    //console.log(enemies.length)
-
     projectiles.forEach((projectile) => {
         projectile.update()
     })
-
-    console.log(projectiles)
+    buildSquare1.draw()
+    buildSquare1.checkEnemiesInRange()
+    //console.log(enemies.length)
+    //console.log(projectiles)
 
     checkWaypoints()
     decideEnemyMovement()
@@ -230,10 +280,17 @@ function loseLife(enemy, index) {
 let roundMultiplier = 1.1
 
 function startRound() {
+    roundPromptEl.style.visibility = "hidden"
     roundEnded = false
     spawningFinished = false
+    let nextEnemyHealth = 0
     enemySpawner = setInterval(() => {
-        enemies.push(new Enemy(1, 1, 1))
+        console.log(`enemy health max before: ${enemyHealthMax}`)
+        nextEnemyHealth = Math.floor(Math.random() * enemyHealthMax) + 1
+        console.log(`enemy health max after: ${enemyHealthMax}`)
+        console.log(`next enemy health: ${nextEnemyHealth}`)
+        enemies.push(new Enemy(nextEnemyHealth, 1, 1))
+        nextEnemyHealth = 0
         enemiesSpawned++
         console.log("spawned enemy")
         if (enemiesSpawned >= enemiesToSpawn) {
@@ -253,9 +310,30 @@ function startRound() {
 
 function checkRoundEnd() {
     if (spawningFinished) {
-        if (enemies.length == 0) {
-            console.log("round ended")
+        if (enemies.length == 0 && roundEnded == false) {
+            //console.log("round ended")
             roundEnded = true
+            roundPromptEl.style.visibility = "visible"
+            money += 100 + round * 10
+            moneyEl.innerHTML = `Money: $${money} `
+            if (roundsWithoutDifficultyIncrease >= maxRoundsWithoutDifficultyIncrease) {
+                enemyHealthMax++
+                roundsWithoutDifficultyIncrease = 0
+            } else {
+                roundsWithoutDifficultyIncrease++
+                let rng = Math.floor(Math.random() * 6) + 1
+                if (rng == 1) {
+                    enemyHealthMax++
+                    roundsWithoutDifficultyIncrease = 0
+                } else if (rng == 2) {
+                    enemyHealthMax += 2
+                    roundsWithoutDifficultyIncrease = 0
+                } else if (rng == 3) {
+                    enemyHealthMax += 3
+                    roundsWithoutDifficultyIncrease = 0
+                }
+            }    
+            console.log(roundsWithoutDifficultyIncrease)
         }
     }
 }
@@ -288,5 +366,47 @@ window.addEventListener("keypress", (event) => {
         round++
         roundCounterEl.innerHTML = `Round: ${round} `
         startRound()
+    }
+})
+
+function updateDescription(text) {
+    document.getElementById("descriptionBox").style.visibility = "visible";
+    document.getElementById("descriptionBox").innerText = text;
+}
+
+function resetDescription() {
+    document.getElementById("descriptionBox").style.visibility = "hidden";
+}
+
+upgradeSpeedT1El.addEventListener("click", () => {
+    if (money >= speedUpgradeCostT1 && buildSquare1.cooldownTime > 100) {
+        money -= speedUpgradeCostT1
+        speedUpgradeCostT1 += 200
+        buildSquare1.cooldownTime -= 100
+        if (buildSquare1.cooldownTime < 100) {
+            upgradeSpeedT1El.innerHTML = "Max Level"
+        }
+        upgradeSpeedT1El.innerHTML = `$${speedUpgradeCostT1}`
+    }
+})
+
+upgradeDamageT1El.addEventListener("click", () => {
+    if (money >= damageUpgradeCostT1) {
+        money -= damageUpgradeCostT1
+        damageUpgradeCostT1 += 250
+        buildSquare1.damage++
+        upgradeDamageT1El.innerHTML = `$${damageUpgradeCostT1}`
+    }
+})
+
+upgradeAccuracyT1El.addEventListener("click", () => {
+    if (money >= accuracyUpgradeCostT1 && buildSquare1.accuracy < 5) {
+        money -= accuracyUpgradeCostT1
+        accuracyUpgradeCostT1 += 300
+        buildSquare1.accuracy += 1
+        if (buildSquare1.accuracy == 5) {
+            upgradeAccuracyT1El.innerHTML = "Max Level"
+        }
+        upgradeAccuracyT1El.innerHTML = `$${accuracyUpgradeCostT1}`
     }
 })
