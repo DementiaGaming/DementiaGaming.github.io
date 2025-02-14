@@ -370,11 +370,12 @@ window.addEventListener("keypress", (event) => {
 })
 
 function updateDescription(text) {
+    document.getElementById("descriptionBox").style.visibility = "visible";
     document.getElementById("descriptionBox").innerText = text;
 }
 
 function resetDescription() {
-    document.getElementById("descriptionBox").innerText = "Hover over a button to see details!";
+    document.getElementById("descriptionBox").style.visibility = "hidden";
 }
 
 upgradeSpeedT1El.addEventListener("click", () => {
