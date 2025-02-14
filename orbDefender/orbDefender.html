@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orb Defender</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="fixed text-white text-sm ml-2 mt-1 select-none">
-        <span>Score: </span><span id = "scoreEl">0</span>
+        <span>Score: </span><span id="scoreEl">0</span>
     </div>
 
     <div class="fixed top-1 right-2 text-white text-sm select-none">
@@ -26,14 +26,14 @@
     </div>
 
     <canvas id="canvas"></canvas>
+    
+    <div class="level-indicator">Level: <span id="levelEl">1</span></div>
+    <div class="xp-container">
+        <div class="xp-bar" id="xpBar"></div>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="script.js"></script>
 </body>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-    body {
-        margin: 0px;
-        background: black;
-    }
-</style>
 </html>

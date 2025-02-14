@@ -21,6 +21,9 @@ body {
 .container {
     width: 90%;
     max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures everything inside is centered */
 }
 
 /* Title Styling */
@@ -36,6 +39,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center; /* Ensures buttons are centered */
+    width: 100%;
 }
 
 /* Button Styling */
@@ -51,6 +56,7 @@ button {
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 button:hover {
@@ -73,4 +79,88 @@ button:active {
     button {
         font-size: 1.2rem;
     }
+}
+
+.whats-new-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures both sections are centered */
+    width: 100%;
+    max-width: 600px; /* Keeps content neatly contained */
+    margin-top: 20px;
+}
+
+.whats-new {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.whats-new h2 {
+    color: #00d9ff;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#entriesList {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+#entriesList li {
+    background: #243b55;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.date {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.content {
+    text-align: left;
+    display: inline-block;
+}
+
+/* Socials Section - Perfectly Centered Under "What's New" */
+.socials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px; /* Same width as "What's New" */
+}
+
+/* Social Media Icons */
+.social-icon img {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    filter: brightness(0) invert(1);
+}
+
+/* Hover Effect */
+.social-icon img:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
 }
