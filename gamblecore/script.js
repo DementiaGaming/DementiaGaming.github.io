@@ -16,6 +16,9 @@ let winAmount = 0
 let slotIcons = ["placeholder","🍒","🍋","🍇","🍍","🍊","⭐","💎"] //placeholder because random num generates 1-7 while start of list is 0
 let winType = ""
 let loseStreak = 0
+let inDebt = false
+let firstSpin = true
+let spins = 0
 
 moneyEl.innerHTML = `Money: $${money}`
 
@@ -52,10 +55,6 @@ async function spinMachine() {
     checkWinnings()
 }
 
-let a1 = false;
-let a2 = false;
-let a3 = false;
-
 function checkWinnings() {
     if (slot1 == "💎" && slot2 == "💎" && slot3 == "💎") {
         winAmount = 1000
@@ -64,10 +63,6 @@ function checkWinnings() {
         loseStreak = 0
         gambleMessage.innerHTML = "You win big!"
         unlockAchievement("Big Winner");
-        if (!a2) {
-            showAchievementPopup("Big Winner");
-            a2 = true;
-        }
     }
     else if(slot1 == "⭐" && slot2 == "⭐" && slot3 == "⭐") {
         winAmount = 500
@@ -75,6 +70,7 @@ function checkWinnings() {
         winType = "win"
         loseStreak = 0
         gambleMessage.innerHTML = "You win!"
+        unlockAchievement("Winner");
     }
     else if (slot1 == slot2 && slot2 == slot3){
         winAmount = 100
@@ -83,20 +79,20 @@ function checkWinnings() {
         loseStreak = 0
         gambleMessage.innerHTML = "You win!"
         unlockAchievement("Winner");
-        if (!a1) {
-            showAchievementPopup("Winner");
-            a1 = true;
-        }
     }
     else {
         winType = "lose"
         winAmount = 0
         loseStreak++
+        if (firstSpin) {
+            unlockAchievement("Begginers Misfortune")
+        }
     }
     displayAnimations()
 }
 
 function displayAnimations() {
+    spins++
     if (winType == "lose" && loseStreak < 15) {
         loseStreak++
         gambleMessage.innerHTML = "Aw dang it"
@@ -118,11 +114,20 @@ function displayAnimations() {
 
     spinButton.classList.remove('disabled');
 
-    if (money <= 0 && !a3) {
+    if (money <= 0) {
         unlockAchievement("All In, All Gone");
-        showAchievementPopup("All In, All Gone");
-        a3 = true;
+        inDebt = true
     }
+    if (inDebt && money > 0) {
+        unlockAchievement("Back from the debt")
+    }
+    if (loseStreak >= 15) {
+        unlockAchievement("99% of gamblers quit before they win big")
+    }
+    if (spins >= 50) {
+        unlockAchievement("50 spins later...")
+    }
+    firstSpin = false
 }
 
 spinButton.addEventListener('click', () => {
@@ -134,7 +139,7 @@ spinButton.addEventListener('click', () => {
 });
 
 function showAchievementPopup(achievementName) {
-    console.log("Trying to show popup for:", achievementName); // Should log correctly
+    console.log("Trying to show popup for:", achievementName);
 
     if (!achievementName) {
         console.error("⚠️ ERROR: achievementName is undefined!");
@@ -155,4 +160,9 @@ function showAchievementPopup(achievementName) {
     setTimeout(() => {
         popup.classList.remove("show");
     }, 3000);
+}
+
+function addMoney(amount) { // for debugging
+    money += amount
+    moneyEl.innerHTML = `Money: $${money}`
 }

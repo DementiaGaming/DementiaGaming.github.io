@@ -164,6 +164,7 @@ function levelUp() {
 
 // testing(delete later)
 //document.addEventListener("click", () => addXP(10));
+let firstHit = false;
 
 function init() {
     player = new Player(x, y, 10, "white", 10) 
@@ -186,6 +187,7 @@ function init() {
     damage = 10
     damageIncreaseInterval = 0
     projectileRadius = 5
+    firstHit = false
     timerIntervalID = setInterval(updateTimer, 10)
     bonusScoreID = setInterval(addBonusScore, 1000)
     setIntervals()
@@ -313,6 +315,7 @@ function animate() {
                 gsap.to(player, {
                     radius: player.radius - 10
                 })
+                firstHit = true
             } 
             else {
                 playerDie()
@@ -439,37 +442,27 @@ startGameButton.addEventListener("click", () => {
     modalEl.style.display = "none"
 })
 
-let a1 = false
-let a2 = false
-let a3 = false
-let a4 = false
-let a5 = false
-
 function checkAchievements() {
-    if (level >= 10 && !a1) {
+    if (level >= 10) {
         unlockAchievement("Orb Novice");
-        showAchievementPopup("Orb Novice");
-        a1 = true;
     }
-    if (level >= 20 && !a2) {
+    if (level >= 20) {
         unlockAchievement("Orb Apprentice");
-        showAchievementPopup("Orb Apprentice");
-        a2 = true;
     }
-    if (level >= 30 && !a3) {
+    if (level >= 30) {
         unlockAchievement("Orb Master");
-        showAchievementPopup("Orb Master");
-        a3 = true;
     }
-    if (level >= 40 && !a4) {
+    if (level >= 40) {
         unlockAchievement("Orb Grandmaster");
-        showAchievementPopup("Orb Grandmaster");
-        a4 = true;
     }
-    if (level >= 50 && !a5) {
+    if (level >= 50) {
         unlockAchievement("Orb Legend");
-        showAchievementPopup("Orb Legend");
-        a5 = true;
+    }
+    if (seconds >= 60 && !firstHit) {
+        unlockAchievement("Can't Touch This");
+    }
+    if (score >= 250000) {
+        unlockAchievement("Master of the Orbs");
     }
 }
 

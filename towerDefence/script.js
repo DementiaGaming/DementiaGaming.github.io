@@ -44,11 +44,11 @@ class Enemy {
             if (this.xPos < projectile.x && this.xPos + 50 > projectile.x) {
                 if (this.yPos < projectile.y && this.yPos + 50> projectile.y) {
                     this.health -= projectile.damage
-                    money += 5
+                    money += 10
                     projectiles.splice(index, 1)
                     if (this.health <= 0) {
                         enemies.splice(enemies.indexOf(this), 1)
-                        money += 10
+                        money += 20
                     }
                 }
             }
@@ -167,9 +167,9 @@ let roundsWithoutDifficultyIncrease = 0
 let money = 100 
 let lives = 100
 
-let speedUpgradeCostT1 = 200
-let damageUpgradeCostT1 = 200
-let accuracyUpgradeCostT1 = 200
+let speedUpgradeCostT1 = 100
+let damageUpgradeCostT1 = 100
+let accuracyUpgradeCostT1 = 100
 
 let buildSquare1 = new BuildSquares(300, 200, 100, 1)
 
@@ -381,19 +381,20 @@ function resetDescription() {
 upgradeSpeedT1El.addEventListener("click", () => {
     if (money >= speedUpgradeCostT1 && buildSquare1.cooldownTime > 100) {
         money -= speedUpgradeCostT1
-        speedUpgradeCostT1 += 200
+        speedUpgradeCostT1 += 100
         buildSquare1.cooldownTime -= 100
-        if (buildSquare1.cooldownTime < 100) {
+        if (buildSquare1.cooldownTime <= 100) {
             upgradeSpeedT1El.innerHTML = "Max Level"
+        } else {
+            upgradeSpeedT1El.innerHTML = `$${speedUpgradeCostT1}`
         }
-        upgradeSpeedT1El.innerHTML = `$${speedUpgradeCostT1}`
-    }
+   }
 })
 
 upgradeDamageT1El.addEventListener("click", () => {
     if (money >= damageUpgradeCostT1) {
         money -= damageUpgradeCostT1
-        damageUpgradeCostT1 += 250
+        damageUpgradeCostT1 += 150
         buildSquare1.damage++
         upgradeDamageT1El.innerHTML = `$${damageUpgradeCostT1}`
     }
@@ -402,11 +403,12 @@ upgradeDamageT1El.addEventListener("click", () => {
 upgradeAccuracyT1El.addEventListener("click", () => {
     if (money >= accuracyUpgradeCostT1 && buildSquare1.accuracy < 5) {
         money -= accuracyUpgradeCostT1
-        accuracyUpgradeCostT1 += 300
+        accuracyUpgradeCostT1 += 200
         buildSquare1.accuracy += 1
         if (buildSquare1.accuracy == 5) {
             upgradeAccuracyT1El.innerHTML = "Max Level"
+        } else {
+            upgradeAccuracyT1El.innerHTML = `$${accuracyUpgradeCostT1}`
         }
-        upgradeAccuracyT1El.innerHTML = `$${accuracyUpgradeCostT1}`
     }
 })

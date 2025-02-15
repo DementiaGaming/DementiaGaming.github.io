@@ -1,10 +1,11 @@
 <div id="achievement-popup" class="popup">
     <span id="achievement-text"></span>
 </div>
+<script src="../achievementsPage/achievements.js"></script>
 
 <script>
 function showAchievementPopup(achievementName) {
-    console.log("Trying to show popup for:", achievementName); // Should log correctly
+    console.log("Trying to show popup for:", achievementName);
 
     if (!achievementName) {
         console.error("⚠️ ERROR: achievementName is undefined!");

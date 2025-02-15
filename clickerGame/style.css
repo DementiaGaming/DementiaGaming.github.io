@@ -97,3 +97,28 @@ body {
 .amount {
     color: #2c3e50;
 }
+
+.popup {
+    position: fixed;
+    bottom: -80px; /* Start hidden */
+    left: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: all 0.5s ease-out;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
+    border: 2px solid #00d9ff;
+}
+
+/* Show popup animation */
+.popup.show {
+    bottom: 20px;
+    opacity: 1;
+}
