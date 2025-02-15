@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orb Defender</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
 </head>
+<style>
+    #leaderboardContainer {
+        z-index: 1000;
+    }
+</style>
 <body>
     <div class="fixed text-white text-sm ml-2 mt-1 select-none">
         <span>Score: </span><span id="scoreEl">0</span>
@@ -23,6 +33,13 @@
                 <button class="bg-blue-500 text-white w-full py-3 rounded-full text-sm" id="startGameButton">Start Game</button>
             </div>
         </div>
+    </div>
+
+    <div class="fixed top-7 right-5 bg-gray-800 text-white p-4 rounded-lg shadow-lg w-80" id="leaderboardContainer">
+        <h2 class="text-lg font-bold mb-2">Leaderboard</h2>
+        <ul id="leaderboard" class="text-sm">
+            <!-- Scores will be dynamically added here -->
+        </ul>
     </div>
 
     <canvas id="canvas"></canvas>

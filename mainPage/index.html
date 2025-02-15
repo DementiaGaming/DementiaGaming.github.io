@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Games</h1>
+        <h1 class="title" id="welcome">Welcome</h1>
         <div class="button-container">
             <button id="rpsButton" onclick="window.location.href='../rps/rps.html';">Rock Paper Scissors</button>
             <button id="orbDefenderButton" onclick="window.location.href='../orbDefender/orbDefender.html';">Orb Defender</button>
@@ -25,6 +25,14 @@
                 <li>
                     <div class="date">15/02/2025</div>
                     <div class="content">
+                        <p>Added Accounts</p>
+                        <ul>
+                            <li>Sign up or login on the settings page</li>
+                            <li>Your username will be used on leaderboards</li>
+                            <li>If you aren't signed in you will be given a random username</li>
+                        </ul>
+                        <p>Added a leaderboard to Orb Defender</p>
+                        <p>Added a settings page</p>
                         <p>Added more achievements</p>
                         <ul>
                             <li>Rock Paper Scissors and Clicker Game have achievements now</li>
@@ -85,7 +93,10 @@
             <a onclick="window.location.href='../achievementsPage/index.html'" target="_blank" class="social-icon">
                 <img src="icons/trophy.png" alt="Achievements">
             </a>
-        </div>
+            <a href="../settingsPage/index.html" class="social-icon">
+                <img src="icons/settings.png" alt="Settings">
+            </a>
+       </div>
     </div>
     
     <script src="script.js"></script>

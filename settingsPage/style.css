@@ -1,0 +1,143 @@
+body {
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+.auth-container {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    width: 350px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.auth-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #555;
+    width: calc(100% - 24px);
+    background-color: #2a2a2a;
+    color: white;
+}
+
+.auth-form button {
+    padding: 12px;
+    background-color: #00d9ff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.auth-form button:hover {
+    background-color: #00aacc;
+}
+
+.switch-text {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.switch-text a {
+    color: #00d9ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.switch-text a:hover {
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
+
+#user-info {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    width: 350px;
+    text-align: center;
+}
+
+#user-info h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #00d9ff;
+}
+
+#user-info button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background-color: #00d9ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#user-info button:hover {
+    background-color: #00aacc;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+#signed-in-view {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    width: 350px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+#signed-in-view h1 {
+    font-size: 1.8rem;
+    color: #00d9ff;
+    margin-bottom: 10px;
+}
+
+#signed-in-view span {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+#signed-in-view button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background-color: #00d9ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+#signed-in-view button:hover {
+    background-color: #00aacc;
+}

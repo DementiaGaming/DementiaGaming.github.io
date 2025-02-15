@@ -4,10 +4,13 @@ const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl")
 const startGameButton = document.getElementById("startGameButton")
 const modalEl = document.getElementById("modalEl")
+const leaderboardEl = document.getElementById("leaderboardContainer")
 const bigScoreEl = document.getElementById("bigScoreEl")
 const timeEl = document.getElementById("timeEl")
 const levelEl = document.getElementById("levelEl")
 const xpBar = document.getElementById("xpBar");
+
+let username = localStorage.getItem("username");
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -267,11 +270,14 @@ function spawnEnemy() {
 function playerDie() {
     cancelAnimationFrame(animationID)
     modalEl.style.display = "flex"
+    leaderboardEl.style.display = "block"
+    leaderboardEl.offsetHeight;
     bigScoreEl.innerHTML = score
     clearInterval(setIntervalID)
     clearInterval(difficultyIntervalID)
     clearInterval(timerIntervalID)
     clearInterval(bonusScoreID)
+    submitScore(username, score)
 }
 
 let animationID
@@ -440,6 +446,7 @@ startGameButton.addEventListener("click", () => {
     init()
     animate()
     modalEl.style.display = "none"
+    leaderboardEl.style.display = "none"
 })
 
 function checkAchievements() {
@@ -467,7 +474,7 @@ function checkAchievements() {
 }
 
 function showAchievementPopup(achievementName) {
-    console.log("Trying to show popup for:", achievementName); // Should log correctly
+    console.log("Trying to show popup for:", achievementName);
 
     if (!achievementName) {
         console.error("⚠️ ERROR: achievementName is undefined!");
@@ -490,4 +497,79 @@ function showAchievementPopup(achievementName) {
     }, 3000);
 }
 
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyD05szBZ5VCfZn_qQUd3kJd_CeaiaiwMLk",
+    authDomain: "orb-defender-leaderboard.firebaseapp.com",
+    projectId: "orb-defender-leaderboard",
+    storageBucket: "orb-defender-leaderboard.firebasestorage.app",
+    messagingSenderId: "391417318379",
+    appId: "1:391417318379:web:6d7e5b21dd9a3dbd73a7ae",
+    measurementId: "G-45ECVLT6HE"
+};
 
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firestore
+const db = firebase.firestore();
+
+// Test Firebase Connection
+console.log("✅ Firebase initialized successfully!");
+
+function submitScore(playerName, playerScore) {
+    const leaderboardRef = db.collection("leaderboard").doc(playerName); // Use player's name as the document ID
+
+    db.runTransaction(async (transaction) => {
+        const doc = await transaction.get(leaderboardRef);
+
+        if (!doc.exists) {
+            // New player, create their entry
+            transaction.set(leaderboardRef, { name: playerName, score: playerScore });
+        } else {
+            // Player exists, update their score ONLY IF it's higher
+            const existingScore = doc.data().score;
+            if (playerScore > existingScore) {
+                transaction.update(leaderboardRef, { score: playerScore });
+            }
+        }
+    }).then(() => {
+        console.log("Score submitted successfully!");
+        fetchLeaderboard(); // Refresh leaderboard UI
+    }).catch((error) => {
+        console.error("Error submitting score: ", error);
+    });
+}
+
+function fetchLeaderboard() {
+    const db = firebase.firestore();
+
+    db.collection("leaderboard")
+        .orderBy("score", "desc")  // Sort by highest score
+        .limit(100)  // Show top 10 players
+        .get()
+        .then(snapshot => {
+            const leaderboardList = document.getElementById("leaderboard");
+            leaderboardList.innerHTML = ""; // Clear previous leaderboard
+
+            let rank = 1; // Start ranking from 1
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const playerName = data.name || "Unknown";  // Ensure name exists
+                const playerScore = data.score || 0;  // Ensure score exists
+
+                const listItem = document.createElement("li");
+                listItem.className = "flex justify-between py-1 border-b border-gray-700";
+                listItem.innerHTML = `
+                    <span class="font-semibold">${rank}. ${playerName}</span> 
+                    <span>${playerScore}</span>
+                `;
+                leaderboardList.appendChild(listItem);
+                rank++; // Increment rank
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching leaderboard: ", error);
+        });
+}
+
+window.onload = fetchLeaderboard;

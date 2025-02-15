@@ -59,3 +59,27 @@ body {
 canvas {
     z-index: 1000;
 }
+
+#leaderboardContainer {
+    position: fixed;
+    top: 7vh; /* Leaves space at the top */
+    bottom: 7vh; /* Leaves space at the bottom */
+    right: 20px;
+    width: 300px;
+    background: #1f2937;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+#leaderboard {
+    flex-grow: 1; /* Makes the list expand dynamically */
+    overflow-y: auto; /* Enables scrolling if needed */
+}
+
+#leaderboard::-webkit-scrollbar {
+    display: none; /* Hides scrollbar */
+}
