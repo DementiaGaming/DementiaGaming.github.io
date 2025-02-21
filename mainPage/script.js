@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let username = localStorage.getItem("username");
     if (!username) {
         username = `Guest${Math.floor(Math.random() * 1000)}`;
+        localStorage.setItem("username", username)
     }
     console.log(username);
     document.getElementById("welcome").innerHTML = `Welcome ${username}`

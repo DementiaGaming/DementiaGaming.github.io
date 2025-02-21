@@ -545,7 +545,7 @@ function fetchLeaderboard() {
 
     db.collection("leaderboard")
         .orderBy("score", "desc")  // Sort by highest score
-        .limit(100)  // Show top 10 players
+        .limit(100)  // Show top 100 players
         .get()
         .then(snapshot => {
             const leaderboardList = document.getElementById("leaderboard");
