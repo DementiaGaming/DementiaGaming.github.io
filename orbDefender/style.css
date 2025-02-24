@@ -3,6 +3,7 @@ body {
     background: black;
     overflow: hidden;
 }
+
 .xp-container {
     position: fixed;
     bottom: 10px;
@@ -20,6 +21,7 @@ body {
     background: limegreen;
     transition: width 0.3s ease-in-out;
 }
+
 .level-indicator {
     position: fixed;
     bottom: 40px;
@@ -73,6 +75,7 @@ canvas {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    z-index: 1000;
 }
 
 #leaderboard {
@@ -83,3 +86,154 @@ canvas {
 #leaderboard::-webkit-scrollbar {
     display: none; /* Hides scrollbar */
 }
+
+#powerup-popup {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 1), rgba(255, 140, 0, 0.95));
+    color: white;
+    padding: 12px 24px;
+    border-radius: 18px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    box-shadow: 0 0 18px rgba(255, 140, 0, 0.7);
+    border: 2px solid rgba(255, 215, 0, 1);
+    animation: popup-glow 1s infinite alternate;
+}
+
+#powerup-popup.show {
+    animation: popup-slide-in 0.35s ease-out forwards, popup-slide-out 0.45s ease-in-out 1.5s forwards;
+}
+
+@keyframes popup-slide-in {
+    0% {
+        transform: translate(-50%, -60%) scale(0.75);
+        opacity: 0;
+        filter: brightness(0.85);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 1;
+        filter: brightness(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.95);
+        opacity: 1;
+    }
+}
+
+@keyframes popup-slide-out {
+    0% {
+        transform: translate(-50%, -50%) scale(0.95);
+        opacity: 1;
+        filter: brightness(1);
+    }
+    100% {
+        transform: translate(-50%, -40%) scale(0.75);
+        opacity: 0;
+        filter: brightness(0.85);
+    }
+}
+
+@keyframes popup-glow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.7), 0 0 20px rgba(255, 165, 0, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 18px rgba(255, 215, 0, 0.9), 0 0 28px rgba(255, 140, 0, 0.6);
+    }
+}
+
+#screenOverlay {
+    position: fixed; /* Ensure it covers the entire screen */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white; /* Start with white to test */
+    opacity: 0; /* Initially transparent */
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 9999; /* Ensure it's above everything */
+}
+
+#powerup-bars-container {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    display: flex;
+    flex-direction: row; /* Arrange bars horizontally */
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    transition: width 0.3s ease-in-out; /* Smooth resizing */
+}
+
+.powerup-bar {
+    height: 20px;
+    background: gray;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    min-width: 80px; /* Prevent bars from becoming too small */
+    transition: width 0.3s ease-in-out;
+}
+
+.powerup-bar-inner {
+    height: 100%;
+    width: 100%;
+    background: limegreen;
+    transition: width linear;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.powerup-bar-text {
+    position: relative;
+    z-index: 2;
+    font-size: 12px; /* Adjust font size for better fit */
+    white-space: nowrap;
+    color: black;
+}
+
+/* Full-screen warning effect */
+#warning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 0, 0, 0.1); /* Light red, adjust opacity */
+    display: none;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Warning text */
+#warning-text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;  /* Bigger text */
+    font-weight: bold;
+    color: red; /* 🔥 Text is now red */
+    text-shadow: 2px 2px 5px black;
+    opacity: 0; /* Initially hidden */
+}
+

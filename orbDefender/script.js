@@ -9,6 +9,7 @@ const bigScoreEl = document.getElementById("bigScoreEl")
 const timeEl = document.getElementById("timeEl")
 const levelEl = document.getElementById("levelEl")
 const xpBar = document.getElementById("xpBar");
+const powerupBarsContainer = document.getElementById("powerup-bars-container");
 
 let username = localStorage.getItem("username");
 
@@ -62,19 +63,42 @@ class Enemy {
         this.radius = radius
         this.colour = colour
         this.speed = speed
+        this.dashMode = false //if true enemy dashes at the player
+        this.dashSpeedMultiplier = 3
+        this.powerup = false
+        this.hue = 0
     }
 
     draw() {
         c.beginPath()
         c.arc(this.x, this.y, this.radius, 0,Math.PI * 2, false)
-        c.fillStyle = this.colour
+        if (!this.powerup) {
+            c.fillStyle = this.colour
+        } else {
+            c.fillStyle = `hsl(${this.hue}, 100%, 50%)`
+        }
         c.fill()
     }
 
     update() {
-        this.draw()
-        this.x = this.x + this.speed.x
-        this.y = this.y + this.speed.y
+        if (!this.dashMode) {
+            this.draw()
+            this.x = this.x + this.speed.x
+            this.y = this.y + this.speed.y
+            if ((Math.floor((Math.random() * dashModeFrequency + 1)) == 1) && !this.powerup) {
+                this.dashMode = true
+            }
+        } else {
+            this.draw()
+            this.x = this.x + this.speed.x * this.dashSpeedMultiplier
+            this.y = this.y + this.speed.y * this.dashSpeedMultiplier
+        }
+        if ((Math.floor((Math.random() * dashModeFrequency + 1)) == 1) && !this.powerup && !this.dashMode) {
+            this.powerup = true
+        }
+        if (this.powerup) {
+            this.hue = (this.hue + 10) % 360
+        }
     }
 }
 
@@ -93,7 +117,7 @@ class Particle {
         c.save()
         c.globalAlpha = this.alpha;
         c.beginPath()
-        c.arc(this.x, this.y, this.radius, 0,Math.PI * 2, false)
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.colour
         c.fill()
         c.restore()
@@ -133,8 +157,14 @@ let damageIncreaseInterval = 0
 
 let projectileRadius = 5
 
+let dashModeFrequency = 10000
+
 function addXP(amount) {
-    xp += amount;
+    if (doubleXpActive) {
+        xp += amount * 2;
+    } else {
+        xp += amount;
+    }
     if (xp >= maxXP) {
         xp -= maxXP;
         levelUp();
@@ -165,8 +195,6 @@ function levelUp() {
     }
 }
 
-// testing(delete later)
-//document.addEventListener("click", () => addXP(10));
 let firstHit = false;
 
 function init() {
@@ -191,6 +219,7 @@ function init() {
     damageIncreaseInterval = 0
     projectileRadius = 5
     firstHit = false
+    dashModeFrequency = 10000
     timerIntervalID = setInterval(updateTimer, 10)
     bonusScoreID = setInterval(addBonusScore, 1000)
     setIntervals()
@@ -213,19 +242,34 @@ function updateTimer() {
 }
 
 function increaseSpawnSpeed() {
-    if(spawnSpeed > 300) {
+    if(spawnSpeed > 500) {
         spawnSpeed -= 100
-        nextDifficulttyIncrease += 5000
+        dashModeFrequency -= 1000
+        nextDifficulttyIncrease += 10000
     } else if (spawnSpeed > 100) {
         spawnSpeed -= 50
-        nextDifficulttyIncrease += 10000
+        dashModeFrequency -= 500
+        nextDifficulttyIncrease += 15000
     }   
     clearInterval(setIntervalID)
     clearInterval(difficultyIntervalID)
     setIntervals()
 }
 
+let enemiesToBarrage = 0
+
 function spawnEnemy() {
+    if ((Math.floor(Math.random() * 100) + 1) === 5 && enemiesToBarrage <= 0) {
+        console.log("enemy barage")
+        showWarning("Enemy Barrage Incomming")
+        setTimeout(() => {
+            enemiesToBarrage = Math.floor(Math.random() * 20) + 1
+            if (enemiesToBarrage < 10) {
+                enemiesToBarrage = 10
+            }
+        }, 5000)
+    }
+
     let radius
     if (level <= 10) {
         radius = Math.random() * (30 - 5) + 5 
@@ -259,12 +303,18 @@ function spawnEnemy() {
     }
 
     
-    const colour = `hsl(${Math.random() * 360}, 50%, 50%)`
+    const hue = Math.random() * 300 + 30;
+    const colour = `hsl(${hue}, 50%, 50%)`
     
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
     const speed = {x:Math.cos(angle) , y: Math.sin(angle)}
     
     enemies.push(new Enemy(x,y,radius,colour,speed))
+
+    if (enemiesToBarrage >= 1) {
+        enemiesToBarrage -= 1
+        spawnEnemy()
+    }
 }
 
 function playerDie() {
@@ -278,7 +328,320 @@ function playerDie() {
     clearInterval(timerIntervalID)
     clearInterval(bonusScoreID)
     submitScore(username, score)
+    removeAllPowerupBars()
 }
+
+function addScore(amount) {
+    score += amount * scoreMultiplier
+    scoreEl.innerHTML = score
+}
+
+function showWarning(message, duration = 5000) { // Default warning lasts 5 sec
+    const overlay = document.getElementById("warning-overlay");
+    const text = document.getElementById("warning-text");
+
+    text.textContent = message;
+    overlay.style.display = "block";
+
+    // 🔥 Flash effect with longer duration
+    gsap.to(overlay, { 
+        opacity: 0.3, 
+        duration: 0.5,   // ⏳ Each flash lasts longer
+        repeat: 12,       // 🔄 Number of flashes
+        yoyo: true       // ↔️ Makes it fade in and out
+    });
+
+    // Show text with fade effect
+    gsap.to(text, { opacity: 1, duration: 0.5 });
+
+    // Hide everything after the duration
+    setTimeout(() => {
+        gsap.to(overlay, { opacity: 0, duration: 1, onComplete: () => overlay.style.display = "none" });
+        gsap.to(text, { opacity: 0, duration: 0.5 });
+    }, duration);
+}
+
+const powerupTimeouts = {}; // Store timeouts
+const powerupAnimations = {}; // Store GSAP animations
+
+function createPowerupBar(powerupName, duration, color) {
+    const powerupBarsContainer = document.getElementById("powerup-bars-container");
+
+    // Create bar
+    const bar = document.createElement("div");
+    bar.classList.add("powerup-bar");
+
+    // Create inner bar
+    const barInner = document.createElement("div");
+    barInner.classList.add("powerup-bar-inner");
+    barInner.style.backgroundColor = color;
+
+    // Create text
+    const barText = document.createElement("span");
+    barText.classList.add("powerup-bar-text");
+    barText.textContent = powerupName;
+
+    // Append elements
+    bar.appendChild(barInner);
+    bar.appendChild(barText);
+    powerupBarsContainer.appendChild(bar);
+
+    // Resize bars equally
+    resizeBars();
+
+    // Start animation
+    startPowerupTimer(powerupName, barInner, duration);
+}
+
+// ✅ Function to start/restart the timer animation
+function startPowerupTimer(powerupName, barInner, duration) {
+    // Clear any existing animation or timeout
+    if (powerupAnimations[powerupName]) {
+        powerupAnimations[powerupName].kill();
+    }
+    if (powerupTimeouts[powerupName]) {
+        clearTimeout(powerupTimeouts[powerupName]);
+    }
+
+    // Reset bar to full
+    barInner.style.width = "100%";
+
+    // Create new GSAP animation
+    powerupAnimations[powerupName] = gsap.to(barInner, {
+        width: "0%",
+        duration: duration,
+        ease: "linear",
+        onComplete: () => {
+            barInner.parentElement.remove();
+            resizeBars();
+            delete powerupTimeouts[powerupName];
+            delete powerupAnimations[powerupName];
+        },
+    });
+
+    // Set timeout for cleanup
+    powerupTimeouts[powerupName] = setTimeout(() => {
+        barInner.parentElement.remove();
+        resizeBars();
+        delete powerupTimeouts[powerupName];
+        delete powerupAnimations[powerupName];
+    }, duration * 1000);
+}
+
+// Function to resize all bars equally
+function resizeBars() {
+    const powerupBarsContainer = document.getElementById("powerup-bars-container");
+    const bars = powerupBarsContainer.children;
+    const barCount = bars.length;
+    
+    if (barCount === 0) return;
+
+    const newWidth = Math.max(80, 100 / barCount) + "%"; // Distribute width evenly
+
+    // Animate all bars to equal width
+    gsap.to(".powerup-bar", {
+        width: newWidth,
+        duration: 0.3,
+        ease: "ease-in-out",
+    });
+}
+
+function removePowerupBar(powerupName) {
+    const bars = document.querySelectorAll(".powerup-bar");
+
+    bars.forEach((bar) => {
+        if (bar.querySelector(".powerup-bar-text").textContent === powerupName) {
+            bar.remove();
+            resizeBars();
+        }
+    });
+}
+
+function removeAllPowerupBars() {
+    const powerupBarsContainer = document.getElementById("powerup-bars-container");
+
+    // Remove all bars from the container
+    while (powerupBarsContainer.firstChild) {
+        powerupBarsContainer.firstChild.remove();
+    }
+
+    // Resize bars (which will now be empty)
+    resizeBars();
+}
+
+function resetPowerupBar(powerupName) {
+    const bars = document.querySelectorAll(".powerup-bar");
+
+    bars.forEach((bar) => {
+        const barText = bar.querySelector(".powerup-bar-text");
+        if (barText.textContent === powerupName) {
+            const barInner = bar.querySelector(".powerup-bar-inner");
+
+            // Restart the timer animation
+            startPowerupTimer(powerupName, barInner, 10); // Change 5 to the actual duration you want
+        }
+    });
+}
+
+let nukeActive = false
+
+function giveRandomPowerup() {
+    const randomPowerup = Math.floor(Math.random() * 7) + 1;
+
+    if (randomPowerup === 1) {
+        activateNuke();
+    } else if (randomPowerup === 2) {
+        activateShield()
+    } else if (randomPowerup === 3) {
+        activateDoublePoints()
+    } else if (randomPowerup === 4) {
+        activateDoubleXp()
+    } else if (randomPowerup === 5) {
+        activateSizeUp()
+    } else if (randomPowerup === 6) {
+        activateLevelUpPower()
+    } else if (randomPowerup === 7) {
+        activateGatlingPower()
+    }
+}
+
+let gatlingActive = false
+function activateGatlingPower() {
+    showPowerupPopup("Gatling Attack")
+    let timeout
+
+    if (!gatlingActive) {
+        createPowerupBar("Gatling Attack", 10, "red")
+        gatlingActive = true
+        timeout = setTimeout(() => {
+            gatlingActive = false
+        }, 10000)
+    } else {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            gatlingActive = false
+        }, 10000)
+        resetPowerupBar("Gatling Attack")
+    }
+}
+
+function activateLevelUpPower() {
+    showPowerupPopup("Level Up")
+    levelUp()
+}
+
+function activateSizeUp() {
+    showPowerupPopup("Size Up")
+    gsap.to(player, {
+        radius: player.radius + 20
+    })
+}
+
+let doubleXpActive = false
+
+function activateDoubleXp() {
+    showPowerupPopup("Double XP")
+    let timeout
+    if (!doubleXpActive) {
+        createPowerupBar("Double XP", 10, "green")
+        doubleXpActive = true
+        timeout = setTimeout(() => {
+            doubleXpActive = false
+        }, 10000)
+    } else {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            doubleXpActive = false
+        }, 10000)
+        resetPowerupBar("Double XP")
+    }
+}
+
+let doublePointsMultiplier = 1
+
+function activateDoublePoints() {
+    showPowerupPopup("Double Points");
+    let timeout
+
+    if (doublePointsMultiplier === 1) {
+        doublePointsMultiplier = 2;
+        createPowerupBar("Double Points", 10, "yellow");
+
+        timeout = setTimeout(() => {
+            doublePointsMultiplier = 1;
+        }, 10000);
+    } else {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            doublePointsMultiplier = 1;
+        }, 10000);
+        resetPowerupBar("Double Points")
+    }
+}
+
+let shieldActive = false;
+let shieldOpacity = 0.5;
+
+function activateShield() {
+    showPowerupPopup("Shield");
+    let timeout
+
+    if (!shieldActive) {
+        createPowerupBar("Shield", 10, "cyan");
+        shieldActive = true;
+        timeout = setTimeout(() => {
+            shieldActive = false;
+        }, 10000);
+    } else {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            shieldActive = false;
+        }, 10000);
+        resetPowerupBar("Shield")
+    }
+}
+
+function drawShield() {
+    let shieldRadius = player.radius + 30;
+    if (shieldActive) {
+        c.beginPath();
+        c.arc(player.x, player.y, shieldRadius, 0, Math.PI * 2, false);
+        c.fillStyle = `rgba(0, 255, 255, ${shieldOpacity})`; // Transparent cyan color
+        c.fill();
+    }
+}
+
+function activateNuke() {
+    showPowerupPopup("Nuke");
+
+    const overlay = document.getElementById("screenOverlay");
+
+    // Fade to full white (completely covers everything)
+    gsap.to(overlay, {
+        duration: 1,
+        opacity: 1, // Fully visible white screen
+        onComplete: () => {
+            // Remove all enemies efficiently
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                enemies.splice(i, 1)
+                addXP(20)
+            }
+            addXP(100);
+            addScore(10000)
+
+            // Hold white screen for a brief moment before fading out
+            setTimeout(() => {
+                gsap.to(overlay, {
+                    duration: 0.5,
+                    opacity: 0, // Fade back to invisible
+                });
+            }, 500); // Hold for 0.5 seconds before fading out
+        }
+    });
+}
+
+
+
 
 let animationID
 let score = 0
@@ -289,7 +652,10 @@ function animate() {
 
     c.fillStyle = "rgba(0, 0, 0, 0.1)"
     c.fillRect(0, 0, canvas.width, canvas.height);
+
     player.draw()
+
+    drawShield()
 
     particles.forEach((particle, index) => {
         if (particle.alpha <= 0) {
@@ -303,7 +669,7 @@ function animate() {
     projectiles.forEach((projectile, index) => {
         projectile.update()
 
-        if(projectile.x + projectile.radius < 0 || projectile.x - projectile.radius > canvas.width || projectile.y + projectile.radius < 0 || projectile.y - projectile.radius > canvas.height) {
+        if (projectile.x + projectile.radius < 0 || projectile.x - projectile.radius > canvas.width || projectile.y + projectile.radius < 0 || projectile.y - projectile.radius > canvas.height) {
             setTimeout(() => {
                 projectiles.splice(index, 1)
             }, 0)
@@ -312,16 +678,26 @@ function animate() {
 
     enemies.forEach((enemy, index) => {
         enemy.update()
-
+        if (enemy.dashMode) {
+            gsap.to(enemy, {
+                colour: "red"
+            })
+        }
         const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y)
 
         if (distance - enemy.radius - player.radius < 1) {
             if (player.radius > 10) {
-                enemies.splice(index, 1)
-                gsap.to(player, {
-                    radius: player.radius - 10
-                })
-                firstHit = true
+                if (shieldActive) {
+                    shieldActive = false
+                    removePowerupBar("Shield")
+                    enemies.splice(index, 1)
+                } else {
+                    enemies.splice(index, 1)
+                    gsap.to(player, {
+                        radius: player.radius - 10
+                    })
+                    firstHit = true
+                }
             } 
             else {
                 playerDie()
@@ -343,7 +719,7 @@ function animate() {
                 }
 
                 if (enemy.radius - player.damage > 5) {
-                    score += Math.floor((100 * scoreMultiplier))
+                    score += Math.floor((100 * scoreMultiplier)) * doublePointsMultiplier
                     scoreEl.innerHTML = score
                     gsap.to(enemy, {
                         radius: enemy.radius - player.damage
@@ -355,11 +731,14 @@ function animate() {
                 }
                 else{
                     setTimeout(() => {
-                        score += Math.floor((250 * scoreMultiplier))
+                        score += (Math.floor((250 * scoreMultiplier))) * doublePointsMultiplier
                         scoreEl.innerHTML = score
                         enemies.splice(index, 1)
                         projectiles.splice(projectileIndex, 1)
                         addXP(20)
+                        if (enemy.powerup) {
+                            giveRandomPowerup()
+                        }
                     }, 0)
                 }
             }
@@ -370,57 +749,90 @@ function animate() {
 function addBonusScore() {
     switch (seconds) {
         case 10:
-            score += 100
+            score += 100 * doublePointsMultiplier
             scoreMultiplier = 1.1
             addXP(50)
             break;
         case 20:
-            score += 250
+            score += 250 * doublePointsMultiplier
             scoreMultiplier = 1.2
             addXP(100)
             break;
         case 30:
-            score += 500
+            score += 500 * doublePointsMultiplier
             scoreMultiplier = 1.3
             addXP(150)
             break;
         case 45:
-            score += 750
+            score += 750 * doublePointsMultiplier
             scoreMultiplier = 1.4
             addXP(200)
             break;
         case 60:
-            score += 1000
+            score += 1000 * doublePointsMultiplier
             scoreMultiplier = 2.0
             addXP(250)
             break;
         case 75:
-            score += 1500
+            score += 1500 * doublePointsMultiplier
             scoreMultiplier = 2.5
             addXP(300)
             break;
         case 90:
-            score += 2000
+            score += 2000 * doublePointsMultiplier
             scoreMultiplier = 3.0
             addXP(400)
             break;
         case 105:
-            score += 2500
+            score += 2500 * doublePointsMultiplier
             scoreMultiplier = 4.0
             addXP(500)
             break;
         case 120:
-            score += 5000
+            score += 5000 * doublePointsMultiplier
             scoreMultiplier = 5.0
             addXP(600)
             break;
         case 200:
-            score += 10000
+            score += 10000 * doublePointsMultiplier
             scoreMultiplier = 10.0
             addXP(1000)
             break;
     }
 }
+
+function showPowerupPopup(powerupName) {
+    const popup = document.getElementById('powerup-popup');
+    const text = document.getElementById('powerup-text');
+    text.textContent = `Power-Up: ${powerupName}`;
+    popup.classList.remove('hidden');
+    popup.classList.add('show');
+    setTimeout(() => {
+        popup.classList.remove('show');
+        popup.classList.add('hidden');
+    }, 2000);
+}
+
+/*
+addEventListener("keypress", () => {
+    giveRandomPowerup()
+})
+*/
+
+document.addEventListener("mousemove", (event) => {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    //console.log(`Mouse Position: X=${mouseX}, Y=${mouseY}`);
+
+    if (gatlingActive) {
+        const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
+        const speed = {
+            x: Math.cos(angle) * 5,
+            y: Math.sin(angle) * 5
+        }
+        projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
+    }
+});
 
 addEventListener("click", (event) => {
     const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
@@ -429,7 +841,7 @@ addEventListener("click", (event) => {
         y: Math.sin(angle) * 5
     }
     projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
-    console.log(angle)
+    //console.log(angle)
 })
 
 addEventListener("touchend", (event) => {
@@ -439,7 +851,7 @@ addEventListener("touchend", (event) => {
         y: Math.sin(angle) * 5
     }
     projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
-    console.log(angle)
+    //console.log(angle)
 })
 
 startGameButton.addEventListener("click", () => {

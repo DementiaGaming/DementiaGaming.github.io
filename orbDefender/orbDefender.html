@@ -11,11 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 </head>
-<style>
-    #leaderboardContainer {
-        z-index: 1000;
-    }
-</style>
 <body>
     <div class="fixed text-white text-sm ml-2 mt-1 select-none">
         <span>Score: </span><span id="scoreEl">0</span>
@@ -53,7 +48,18 @@
         <span id="achievement-text"></span>
     </div>
     
+    <div id="powerup-popup" class="powerup-popup hidden">
+        <span id="powerup-text"></span>
+    </div>
 
+    <div id="screenOverlay"></div>
+
+    <div id="powerup-bars-container"></div>
+
+    <div id="warning-overlay">
+        <div id="warning-text">Warning</div>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="script.js"></script>
     <script src="../achievementsPage/achievements.js"></script>
