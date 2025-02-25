@@ -816,11 +816,11 @@ function showPowerupPopup(powerupName) {
     }, 2000);
 }
 
-
+/*
 addEventListener("keypress", () => {
     giveRandomPowerup()
 })
-
+*/
 
 document.addEventListener("mousemove", (event) => {
     const mouseX = event.clientX;
