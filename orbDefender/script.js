@@ -16,6 +16,8 @@ let username = localStorage.getItem("username");
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+let mobileDevice
+
 class Player {
     constructor(x, y, radius, colour, damage){
         this.x = x
@@ -833,25 +835,25 @@ document.addEventListener("mousemove", (event) => {
 });
 
 addEventListener("click", (event) => {
-    const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
-    const speed = {
-        x: Math.cos(angle) * 5,
-        y: Math.sin(angle) * 5
+    if (!mobileDevice) {
+        const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
+        const speed = {
+            x: Math.cos(angle) * 5,
+            y: Math.sin(angle) * 5
+        }
+        projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
+        //console.log(angle)
     }
-    projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
-    //console.log(angle)
 })
 
 addEventListener("touchend", (event) => {
-    event.preventDefault();
-    const angle = Math.atan2(event.changedTouches[0].clientY - canvas.height / 2, event.changedTouches[0].clientX - canvas.width / 2)
+    const angle = Math.atan2(event.changedTouches[0].clientY - canvas.height / 2, event.changedTouches[0].clientX - canvas.width / 2);
     const speed = {
         x: Math.cos(angle) * 5,
         y: Math.sin(angle) * 5
-    }
-    projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
-    //console.log(angle)
-}, { passive: false })
+    };
+    projectiles.push(new Projectile(x, y, projectileRadius, "white", speed));
+});
 
 startGameButton.addEventListener("click", () => {
     init()
@@ -906,6 +908,18 @@ function showAchievementPopup(achievementName) {
     setTimeout(() => {
         popup.classList.remove("show");
     }, 3000);
+}
+
+function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+if (isMobileDevice()) {
+    mobileDevice = true
+    console.log("Mobile device detected")
+} else {
+    mobileDevice = false
+    console.log("Mobile device not detected")
 }
 
 // Firebase configuration
