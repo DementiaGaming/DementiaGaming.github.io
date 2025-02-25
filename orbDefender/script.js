@@ -487,7 +487,7 @@ function giveRandomPowerup() {
     const randomPowerup = Math.floor(Math.random() * 7) + 1;
 
     if (randomPowerup === 1) {
-        activateNuke();
+        activateNuke()
     } else if (randomPowerup === 2) {
         activateShield()
     } else if (randomPowerup === 3) {
@@ -843,14 +843,16 @@ addEventListener("click", (event) => {
 })
 
 addEventListener("touchend", (event) => {
-    const angle = Math.atan2(event.changedTouches[0].clientY - canvas.height / 2, event.changedTouches[0].clientX - canvas.width / 2)
+    const touchX = event.changedTouches[0].clientX;
+    const touchY = event.changedTouches[0].clientY;
+    const angle = Math.atan2(touchY - canvas.height / 2, touchX - canvas.width / 2);
     const speed = {
         x: Math.cos(angle) * 5,
         y: Math.sin(angle) * 5
-    }
-    projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
-    //console.log(angle)
-})
+    };
+    projectiles.push(new Projectile(canvas.width / 2, canvas.height / 2, projectileRadius, "white", speed));
+    //console.log(angle);
+});
 
 startGameButton.addEventListener("click", () => {
     init()
