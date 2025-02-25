@@ -393,41 +393,6 @@ function createPowerupBar(powerupName, duration, color) {
     startPowerupTimer(powerupName, barInner, duration);
 }
 
-// ✅ Function to start/restart the timer animation
-function startPowerupTimer(powerupName, barInner, duration) {
-    // Clear any existing animation or timeout
-    if (powerupAnimations[powerupName]) {
-        powerupAnimations[powerupName].kill();
-    }
-    if (powerupTimeouts[powerupName]) {
-        clearTimeout(powerupTimeouts[powerupName]);
-    }
-
-    // Reset bar to full
-    barInner.style.width = "100%";
-
-    // Create new GSAP animation
-    powerupAnimations[powerupName] = gsap.to(barInner, {
-        width: "0%",
-        duration: duration,
-        ease: "linear",
-        onComplete: () => {
-            barInner.parentElement.remove();
-            resizeBars();
-            delete powerupTimeouts[powerupName];
-            delete powerupAnimations[powerupName];
-        },
-    });
-
-    // Set timeout for cleanup
-    powerupTimeouts[powerupName] = setTimeout(() => {
-        barInner.parentElement.remove();
-        resizeBars();
-        delete powerupTimeouts[powerupName];
-        delete powerupAnimations[powerupName];
-    }, duration * 1000);
-}
-
 // Function to resize all bars equally
 function resizeBars() {
     const powerupBarsContainer = document.getElementById("powerup-bars-container");
@@ -469,18 +434,17 @@ function removeAllPowerupBars() {
     resizeBars();
 }
 
-function resetPowerupBar(powerupName) {
+function resetPowerupBar(powerupName, duration, colour) {
     const bars = document.querySelectorAll(".powerup-bar");
 
     bars.forEach((bar) => {
-        const barText = bar.querySelector(".powerup-bar-text");
-        if (barText.textContent === powerupName) {
-            const barInner = bar.querySelector(".powerup-bar-inner");
-
-            // Restart the timer animation
-            startPowerupTimer(powerupName, barInner, 10); // Change 5 to the actual duration you want
+        if (bar.querySelector(".powerup-bar-text").textContent === powerupName) {
+            bar.remove();
+            resizeBars();
         }
     });
+
+    createPowerupBar(powerupName, duration, colour)
 }
 
 let nukeActive = false
@@ -521,7 +485,7 @@ function activateGatlingPower() {
         timeout = setTimeout(() => {
             gatlingActive = false
         }, 10000)
-        resetPowerupBar("Gatling Attack")
+        resetPowerupBar("Gatling Attack", 10, "red")
     }
 }
 
@@ -553,7 +517,7 @@ function activateDoubleXp() {
         timeout = setTimeout(() => {
             doubleXpActive = false
         }, 10000)
-        resetPowerupBar("Double XP")
+        resetPowerupBar("Double XP", 10, "green")
     }
 }
 
@@ -575,7 +539,7 @@ function activateDoublePoints() {
         timeout = setTimeout(() => {
             doublePointsMultiplier = 1;
         }, 10000);
-        resetPowerupBar("Double Points")
+        resetPowerupBar("Double Points", 10, "yellow")
     }
 }
 
@@ -597,7 +561,7 @@ function activateShield() {
         timeout = setTimeout(() => {
             shieldActive = false;
         }, 10000);
-        resetPowerupBar("Shield")
+        resetPowerupBar("Shield", 10, "cyan")
     }
 }
 
