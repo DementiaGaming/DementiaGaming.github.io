@@ -393,6 +393,40 @@ function createPowerupBar(powerupName, duration, color) {
     startPowerupTimer(powerupName, barInner, duration);
 }
 
+function startPowerupTimer(powerupName, barInner, duration) {
+    // Clear any existing animation or timeout
+    if (powerupAnimations[powerupName]) {
+        powerupAnimations[powerupName].kill();
+    }
+    if (powerupTimeouts[powerupName]) {
+        clearTimeout(powerupTimeouts[powerupName]);
+    }
+
+    // Reset bar to full
+    barInner.style.width = "100%";
+
+    // Create new GSAP animation
+    powerupAnimations[powerupName] = gsap.to(barInner, {
+        width: "0%",
+        duration: duration,
+        ease: "linear",
+        onComplete: () => {
+            barInner.parentElement.remove();
+            resizeBars();
+            delete powerupTimeouts[powerupName];
+            delete powerupAnimations[powerupName];
+        },
+    });
+
+    // Set timeout for cleanup
+    powerupTimeouts[powerupName] = setTimeout(() => {
+        barInner.parentElement.remove();
+        resizeBars();
+        delete powerupTimeouts[powerupName];
+        delete powerupAnimations[powerupName];
+    }, duration * 1000);
+}
+
 // Function to resize all bars equally
 function resizeBars() {
     const powerupBarsContainer = document.getElementById("powerup-bars-container");
