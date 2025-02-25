@@ -180,18 +180,20 @@ function updateXPBar() {
     xpBar.style.width = `${xpPercentage}%`;
 }
 
+let maxXpIncreaseRequirement = 100
 function levelUp() {
     level++;
     levelEl.textContent = level;
-    maxXP += 20; // xp requirement increases
+    maxXP += maxXpIncreaseRequirement; // xp requirement increases
     xp = 0;
     gsap.to(player, {
         radius: player.radius + 5
     })
-    if (damageIncreaseInterval >= 4) {
-        player.damage += 2;
-        projectileRadius += 2;
+    if (damageIncreaseInterval >= 10) {
+        player.damage += 1;
+        projectileRadius += 1;
         damageIncreaseInterval = 0;
+        maxXpIncreaseRequirement *= 2
     } else {
         damageIncreaseInterval++;
     }
@@ -215,6 +217,7 @@ function init() {
     xp = 0;
     level = 1;
     maxXP = 100;
+    maxXpIncreaseRequirement = 100
     updateXPBar();
     levelEl.textContent = level;
     damage = 10
@@ -813,11 +816,11 @@ function showPowerupPopup(powerupName) {
     }, 2000);
 }
 
-/*
+
 addEventListener("keypress", () => {
     giveRandomPowerup()
 })
-*/
+
 
 document.addEventListener("mousemove", (event) => {
     const mouseX = event.clientX;

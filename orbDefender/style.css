@@ -3,6 +3,7 @@ body {
     background: black;
     overflow: hidden;
 }
+
 .xp-container {
     position: fixed;
     bottom: 10px;
@@ -20,6 +21,7 @@ body {
     background: limegreen;
     transition: width 0.3s ease-in-out;
 }
+
 .level-indicator {
     position: fixed;
     bottom: 40px;
@@ -87,7 +89,7 @@ canvas {
 
 #powerup-popup {
     position: fixed;
-    top: 10%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: linear-gradient(135deg, rgba(255, 215, 0, 1), rgba(255, 140, 0, 0.95));
@@ -159,3 +161,79 @@ canvas {
     pointer-events: none; /* Allow clicks to pass through */
     z-index: 9999; /* Ensure it's above everything */
 }
+
+#powerup-bars-container {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    display: flex;
+    flex-direction: row; /* Arrange bars horizontally */
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    transition: width 0.3s ease-in-out; /* Smooth resizing */
+}
+
+.powerup-bar {
+    height: 20px;
+    background: gray;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    min-width: 80px; /* Prevent bars from becoming too small */
+    transition: width 0.3s ease-in-out;
+}
+
+.powerup-bar-inner {
+    height: 100%;
+    width: 100%;
+    background: limegreen;
+    transition: width linear;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.powerup-bar-text {
+    position: relative;
+    z-index: 2;
+    font-size: 12px; /* Adjust font size for better fit */
+    white-space: nowrap;
+    color: black;
+}
+
+/* Full-screen warning effect */
+#warning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 0, 0, 0.1); /* Light red, adjust opacity */
+    display: none;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Warning text */
+#warning-text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;  /* Bigger text */
+    font-weight: bold;
+    color: red; /* 🔥 Text is now red */
+    text-shadow: 2px 2px 5px black;
+    opacity: 0; /* Initially hidden */
+}
+
