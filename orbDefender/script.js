@@ -842,28 +842,16 @@ addEventListener("click", (event) => {
     //console.log(angle)
 })
 
-let canFireProjectile = true;
-
 addEventListener("touchend", (event) => {
-    if (canFireProjectile) {
-        canFireProjectile = false;
-
-        const touchX = event.changedTouches[0].clientX;
-        const touchY = event.changedTouches[0].clientY;
-        const angle = Math.atan2(touchY - canvas.height / 2, touchX - canvas.width / 2);
-        const speed = {
-            x: Math.cos(angle) * 5,
-            y: Math.sin(angle) * 5
-        };
-        projectiles.push(new Projectile(canvas.width / 2, canvas.height / 2, projectileRadius, "white", speed));
-        //console.log(angle);
-
-        // Allow firing again after a short delay
-        setTimeout(() => {
-            canFireProjectile = true;
-        }, 100); // Adjust the delay as needed
+    event.preventDefault();
+    const angle = Math.atan2(event.changedTouches[0].clientY - canvas.height / 2, event.changedTouches[0].clientX - canvas.width / 2)
+    const speed = {
+        x: Math.cos(angle) * 5,
+        y: Math.sin(angle) * 5
     }
-});
+    projectiles.push(new Projectile(x, y, projectileRadius, "white", speed))
+    //console.log(angle)
+}, { passive: false })
 
 startGameButton.addEventListener("click", () => {
     init()
