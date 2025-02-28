@@ -95,7 +95,7 @@ class Enemy {
             this.x = this.x + this.speed.x * this.dashSpeedMultiplier
             this.y = this.y + this.speed.y * this.dashSpeedMultiplier
         }
-        if ((Math.floor((Math.random() * dashModeFrequency + 1)) == 1) && !this.powerup && !this.dashMode) {
+        if ((Math.floor((Math.random() * dashModeFrequency + 1)) == 2) && !this.powerup && !this.dashMode) {
             this.powerup = true
         }
         if (this.powerup) {
@@ -180,7 +180,7 @@ function updateXPBar() {
     xpBar.style.width = `${xpPercentage}%`;
 }
 
-let maxXpIncreaseRequirement = 100
+let maxXpIncreaseRequirement = 50
 function levelUp() {
     level++;
     levelEl.textContent = level;
@@ -217,7 +217,7 @@ function init() {
     xp = 0;
     level = 1;
     maxXP = 100;
-    maxXpIncreaseRequirement = 100
+    maxXpIncreaseRequirement = 50
     updateXPBar();
     levelEl.textContent = level;
     damage = 10
@@ -262,17 +262,11 @@ function increaseSpawnSpeed() {
 }
 
 let enemiesToBarrage = 0
+let enemiesToRush = 0
 
 function spawnEnemy() {
-    if ((Math.floor(Math.random() * 100) + 1) === 5 && enemiesToBarrage <= 0) {
-        console.log("enemy barage")
-        showWarning("Enemy Barrage Incomming")
-        setTimeout(() => {
-            enemiesToBarrage = Math.floor(Math.random() * 20) + 1
-            if (enemiesToBarrage < 10) {
-                enemiesToBarrage = 10
-            }
-        }, 5000)
+    if ((Math.floor(Math.random() * 100) + 1) === 5 && !eventActive) {
+        randomEvent()
     }
 
     let radius
@@ -319,6 +313,12 @@ function spawnEnemy() {
     if (enemiesToBarrage >= 1) {
         enemiesToBarrage -= 1
         spawnEnemy()
+    }
+
+    if (enemiesToRush >= 1) {
+        enemiesToRush -= 1
+        let newestEnemy = enemies[enemies.length - 1]
+        newestEnemy.dashMode = true
     }
 }
 
@@ -643,8 +643,41 @@ function activateNuke() {
     });
 }
 
+let eventActive = false
 
+function randomEvent() {
+    let event = Math.floor(Math.random() * 2) + 1
+    switch(event) {
+        case 1:
+            enemyBarrageEvent()
+            break;
+        case 2:
+            orbRushEvent()
+            break;
+    }
+}
 
+function enemyBarrageEvent() {
+    console.log("enemy barage")
+    showWarning("Enemy Barrage Incomming")
+    setTimeout(() => {
+        enemiesToBarrage = Math.floor(Math.random() * 20) + 1
+        if (enemiesToBarrage < 10) {
+            enemiesToBarrage = 10
+        }
+    }, 5000)
+}
+
+function orbRushEvent() {
+    console.log("orb rush")
+    showWarning("Orb Rush Incomming")
+    setTimeout(() => {
+        enemiesToRush = Math.floor(Math.random() * 15) + 1
+        if (enemiesToBarrage < 5) {
+            enemiesToRush = 5
+        }
+    }, 5000)
+}
 
 let animationID
 let score = 0
