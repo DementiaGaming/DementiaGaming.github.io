@@ -143,7 +143,7 @@ let projectiles = []
 let enemies = []
 let particles = []
 
-let spawnSpeed = 1000
+let spawnSpeed = 2000
 let nextDifficulttyIncrease = 10000
 
 let miliseconds = 0
@@ -247,13 +247,17 @@ function updateTimer() {
 }
 
 function increaseSpawnSpeed() {
-    if(spawnSpeed > 500) {
+    if(spawnSpeed > 1000) {
         spawnSpeed -= 100
-        dashModeFrequency -= 1000
         nextDifficulttyIncrease += 10000
+        if (dashModeFrequency > 2000) {
+            dashModeFrequency -= 1000
+        }
     } else if (spawnSpeed > 100) {
         spawnSpeed -= 50
-        dashModeFrequency -= 500
+        if (dashModeFrequency > 2000) {
+            dashModeFrequency -= 500
+        }
         nextDifficulttyIncrease += 15000
     }   
     clearInterval(setIntervalID)
@@ -265,7 +269,7 @@ let enemiesToBarrage = 0
 let enemiesToRush = 0
 
 function spawnEnemy() {
-    if ((Math.floor(Math.random() * 100) + 1) === 5 && !eventActive) {
+    if ((Math.floor(Math.random() * 50) + 1) === 5 && !eventActive) {
         randomEvent()
     }
 
@@ -274,19 +278,19 @@ function spawnEnemy() {
         radius = Math.random() * (30 - 5) + 5 
     }
     else if (level <= 20) {
-        radius = Math.random() * (40 - 5) + 5
+        radius = Math.random() * (35 - 5) + 5
     }
     else if (level <= 25) {
-        radius = Math.random() * (50 - 5) + 5
+        radius = Math.random() * (40 - 5) + 5
     }
     else if (level <= 30) {
-        radius = Math.random() * (60 - 5) + 5
+        radius = Math.random() * (55 - 5) + 5
     }
     else if (level <= 35) {
-        radius = Math.random() * (70 - 5) + 5
+        radius = Math.random() * (60 - 5) + 5
     }
     else {
-        radius = Math.random() * (80 - 5) + 5
+        radius = Math.random() * (70 - 5) + 5
     }
 
     let x
@@ -661,9 +665,9 @@ function enemyBarrageEvent() {
     console.log("enemy barage")
     showWarning("Enemy Barrage Incomming")
     setTimeout(() => {
-        enemiesToBarrage = Math.floor(Math.random() * 20) + 1
-        if (enemiesToBarrage < 10) {
-            enemiesToBarrage = 10
+        enemiesToBarrage = Math.floor(Math.random() * 5) + 1
+        if (enemiesToBarrage < 3) {
+            enemiesToBarrage = 3
         }
     }, 5000)
 }
