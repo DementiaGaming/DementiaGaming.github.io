@@ -143,8 +143,8 @@ let projectiles = []
 let enemies = []
 let particles = []
 
-let spawnSpeed = 2000
-let nextDifficulttyIncrease = 10000
+let spawnSpeed = 1000
+let nextDifficulttyIncrease = 2500
 
 let miliseconds = 0
 let seconds = 0
@@ -207,7 +207,7 @@ function init() {
     enemies = []
     particles = []
     spawnSpeed = 1000
-    nextDifficulttyIncrease = 5000
+    nextDifficulttyIncrease = 2500
     minutes = 0
     seconds = 0
     timeEl.innerHTML = "0:00"
@@ -224,7 +224,7 @@ function init() {
     damageIncreaseInterval = 0
     projectileRadius = 5
     firstHit = false
-    dashModeFrequency = 10000
+    dashModeFrequency = 7500
     timerIntervalID = setInterval(updateTimer, 10)
     bonusScoreID = setInterval(addBonusScore, 1000)
     setIntervals()
@@ -248,14 +248,16 @@ function updateTimer() {
 
 function increaseSpawnSpeed() {
     if(spawnSpeed > 1000) {
-        spawnSpeed -= 100
-        nextDifficulttyIncrease += 10000
+        spawnSpeed -= 250
+        nextDifficulttyIncrease += 2500
         if (dashModeFrequency > 2000) {
             dashModeFrequency -= 1000
+        } else if (dashModeFrequency > 1000) {
+            dashModeFrequency -= 500
         }
     } else if (spawnSpeed > 100) {
         spawnSpeed -= 50
-        if (dashModeFrequency > 2000) {
+        if (dashModeFrequency > 1000) {
             dashModeFrequency -= 500
         }
         nextDifficulttyIncrease += 15000
@@ -269,7 +271,7 @@ let enemiesToBarrage = 0
 let enemiesToRush = 0
 
 function spawnEnemy() {
-    if ((Math.floor(Math.random() * 50) + 1) === 5 && !eventActive) {
+    if ((Math.floor(Math.random() * 30) + 1) === 5 && !eventActive) {
         randomEvent()
     }
 
