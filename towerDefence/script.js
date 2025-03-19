@@ -195,6 +195,14 @@ function animate() {
     checkWaypoints()
     decideEnemyMovement()
     checkRoundEnd()
+    checkGameEnd()
+}
+
+function checkGameEnd() {
+    if (lives <= 0) {
+        alert(`Game Over\nYou survived ${round} rounds`)
+        location.reload()
+    }
 }
 
 function checkWaypoints() {
