@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Tower Defense (Attacking Towers)</title>
+
+    <style>
+        /* --- CSS Code --- */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        canvas {
+            border: 1px solid black;
+            background-color: #aaddaa;
+            cursor: crosshair;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- --- HTML Structure --- -->
+    <h1>Simple Tower Defense</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <script>
+        // --- JavaScript Code ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const pathWidth = 40;
+
+        const path = [ { x: 0, y: 100 }, { x: 200, y: 100 }, { x: 200, y: 300 }, { x: 600, y: 300 }, { x: 600, y: 500 }, { x: canvasWidth, y: 500 } ];
+
+        let enemies = [];
+        let towers = [];
+        let frameCount = 0;
+        let spawnRate = 120; // Frames between spawns
+        let gameRunning = false; // *** Control game loop ***
+        let animationFrameId = null; // *** Store request ID ***
+
+        // --- Enemy Class ---
+        class Enemy {
+            constructor(path) {
+                this.path = path;
+                this.pathIndex = 0;
+                this.x = path[0].x;
+                this.y = path[0].y;
+                this.speed = 2;
+                this.health = 100;
+                this.maxHealth = 100;
+                this.radius = 10;
+                this.color = 'red';
+                this.target = { ...path[1] };
+                this.isAlive = true;
+            }
+
+            move() {
+                if (!this.target || !this.isAlive) return;
+                const target = this.target;
+                const dx = target.x - this.x;
+                const dy = target.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.speed) {
+                    this.pathIndex++;
+                    if (this.pathIndex >= this.path.length - 1) {
+                        this.reachedEnd();
+                    } else {
+                        this.x = target.x;
+                        this.y = target.y;
+                        this.target = { ...this.path[this.pathIndex + 1] };
+                    }
+                } else {
+                    this.x += (dx / distance) * this.speed;
+                    this.y += (dy / distance) * this.speed;
+                }
+            }
+
+            draw() {
+                if (!this.isAlive) return;
+                // Draw enemy body
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                // Draw health bar
+                const healthBarWidth = this.radius * 2;
+                const healthBarHeight = 5;
+                const healthBarX = this.x - this.radius;
+                const healthBarY = this.y - this.radius - healthBarHeight - 2;
+                ctx.fillStyle = '#555';
+                ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+                const currentHealthWidth = healthBarWidth * (this.health / this.maxHealth);
+                ctx.fillStyle = 'lime'; // Brighter green for health
+                ctx.fillRect(healthBarX, healthBarY, currentHealthWidth > 0 ? currentHealthWidth : 0, healthBarHeight);
+            }
+
+             reachedEnd() {
+                console.log("Enemy reached end!");
+                this.isAlive = false;
+                // TODO: Decrease player lives here
+            }
+
+            takeDamage(amount) {
+                 if (!this.isAlive) return;
+                 this.health -= amount;
+                 console.log(`Enemy health: ${this.health}`); // Debugging
+                 if (this.health <= 0) {
+                     this.health = 0;
+                     this.isAlive = false;
+                     console.log("Enemy destroyed!");
+                     // TODO: Grant player gold/score here
+                 }
+            }
+        } // End of Enemy Class
+
+        // --- Tower Class ---
+        class Tower {
+             constructor(x, y) {
+                 this.x = x;
+                 this.y = y;
+                 this.radius = 15;
+                 this.range = 100;       // *** NEW: Pixels ***
+                 this.damage = 25;      // *** NEW: Damage per shot ***
+                 this.fireRate = 1000;  // *** NEW: Milliseconds between shots (1 second) ***
+                 this.lastShotTime = 0; // *** NEW: Timestamp of the last shot ***
+                 this.color = 'blue';
+                 this.cost = 50;
+                 this.currentTarget = null; // *** NEW: Keep track of the current target ***
+             }
+
+             draw() {
+                 // Draw tower body
+                 ctx.fillStyle = this.color;
+                 ctx.beginPath();
+                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                 ctx.fill();
+
+                 // Draw range indicator
+                 ctx.strokeStyle = 'rgba(0, 0, 255, 0.2)';
+                 ctx.lineWidth = 1;
+                 ctx.beginPath();
+                 ctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
+                 ctx.stroke();
+                 ctx.lineWidth = 1;
+                 ctx.strokeStyle = 'black';
+
+                 // *** NEW: Draw line to target (for debugging/visuals) ***
+                 if (this.currentTarget && this.currentTarget.isAlive) {
+                      ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)'; // Semi-transparent red line
+                      ctx.lineWidth = 2;
+                      ctx.beginPath();
+                      ctx.moveTo(this.x, this.y);
+                      ctx.lineTo(this.currentTarget.x, this.currentTarget.y);
+                      ctx.stroke();
+                      ctx.lineWidth = 1;
+                      ctx.strokeStyle = 'black';
+                 }
+             }
+
+            // *** NEW: Find the first valid target in range ***
+            findTarget(enemyList) {
+                // If current target is still valid (alive and in range), keep targeting it
+                if (this.currentTarget && this.currentTarget.isAlive && this.isInRange(this.currentTarget)) {
+                    return; // No need to find a new target
+                }
+
+                this.currentTarget = null; // Reset target if previous one is invalid
+                for (const enemy of enemyList) {
+                    if (enemy.isAlive && this.isInRange(enemy)) {
+                        this.currentTarget = enemy;
+                        // console.log("Tower found target!"); // Debug
+                        return; // Target the first enemy found
+                    }
+                }
+            }
+
+             // *** NEW: Helper to check distance ***
+             isInRange(enemy) {
+                 const dx = enemy.x - this.x;
+                 const dy = enemy.y - this.y;
+                 // Using squared distance is slightly more efficient (avoids Math.sqrt)
+                 const distanceSquared = dx * dx + dy * dy;
+                 return distanceSquared <= this.range * this.range;
+             }
+
+            // *** NEW: Attack logic ***
+            attack(currentTime) {
+                if (!this.currentTarget || !this.currentTarget.isAlive) {
+                    this.currentTarget = null; // Target lost or dead
+                    return; // Nothing to attack
+                }
+
+                // Check if enough time has passed since the last shot
+                if (currentTime - this.lastShotTime >= this.fireRate) {
+                    // console.log("Tower Firing!"); // Debug
+                    this.currentTarget.takeDamage(this.damage);
+                    this.lastShotTime = currentTime; // Record the time of this shot
+
+                     // If the target died from this shot, clear it immediately
+                    if (!this.currentTarget.isAlive) {
+                        this.currentTarget = null;
+                    }
+                }
+            }
+
+            // *** NEW: Update method to be called each frame ***
+            update(currentTime, enemyList) {
+                 this.findTarget(enemyList); // Find a target if needed
+                 if (this.currentTarget) {
+                      this.attack(currentTime); // Attempt to attack if there's a target
+                 }
+            }
+
+        } // End of Tower Class
+
+
+        // --- Drawing Functions ---
+        function drawPath() {
+            ctx.strokeStyle = '#D2B48C';
+            ctx.lineWidth = pathWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) { ctx.lineTo(path[i].x, path[i].y); }
+            ctx.stroke();
+            ctx.lineWidth = 1; ctx.strokeStyle = 'black'; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+        }
+        function clearCanvas() { ctx.clearRect(0, 0, canvasWidth, canvasHeight); }
+
+        // --- Enemy Management Functions ---
+        function spawnEnemy() { enemies.push(new Enemy(path)); }
+
+        function updateEnemies() {
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                if (!enemy.isAlive) {
+                    enemies.splice(i, 1); // Remove dead or finished enemies
+                } else {
+                    enemy.move();
+                }
+            }
+        }
+
+        function drawEnemies() { enemies.forEach(enemy => enemy.draw()); }
+
+        // --- Tower Management Functions ---
+        function drawTowers() { towers.forEach(tower => tower.draw()); }
+
+        // *** MODIFIED: Pass timestamp and enemies list to tower update ***
+        function updateTowers(currentTime, enemyList) {
+            towers.forEach(tower => {
+                tower.update(currentTime, enemyList); // Call the tower's own update logic
+            });
+        }
+
+        function isPositionValid(x, y) {
+            // Basic overlap check
+            const towerRadius = 15; // Temporary, should access Tower property
+            for (const tower of towers) {
+                const dx = tower.x - x;
+                const dy = tower.y - y;
+                const distanceSq = dx*dx + dy*dy;
+                if (distanceSq < (tower.radius + towerRadius) * (tower.radius + towerRadius)) {
+                     console.log("Position overlaps existing tower.");
+                     return false;
+                }
+            }
+             // TODO: Add path collision check later
+            return true; // Placeholder
+        }
+
+        function handleCanvasClick(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            if (isPositionValid(mouseX, mouseY)) {
+                 // TODO: Check & Deduct Gold
+                 console.log("Placing tower...");
+                 towers.push(new Tower(mouseX, mouseY));
+            } else {
+                 console.log("Invalid tower placement location.");
+            }
+        }
+
+        // --- Game Loop ---
+        let lastTimestamp = 0;
+        function gameLoop(timestamp) { // timestamp provided by requestAnimationFrame
+            if (!gameRunning) return; // Exit if game stopped
+
+            const deltaTime = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            // 1. Clear
+            clearCanvas();
+
+            // 2. Draw Background Elements
+            drawPath();
+
+            // 3. Spawning Logic
+            frameCount++;
+            if (frameCount >= spawnRate) {
+                spawnEnemy();
+                frameCount = 0;
+            }
+
+            // 4. Update Game State
+            updateEnemies();
+            updateTowers(timestamp, enemies); // *** Pass current time and enemies list ***
+
+            // 5. Draw Game Elements
+            drawEnemies();
+            drawTowers();
+            // drawProjectiles(); // TODO
+            // drawUI(); // TODO
+
+            // 6. Request the next frame
+            animationFrameId = requestAnimationFrame(gameLoop); // Store the ID
+        }
+
+        // --- Initialization ---
+        function setupGame() {
+             // *** Add the click listener ONCE during setup ***
+             canvas.removeEventListener('click', handleCanvasClick); // Ensure no duplicates
+             canvas.addEventListener('click', handleCanvasClick);
+             console.log("Game setup complete. Call startGame() to begin.");
+        }
+
+        function startGame() {
+            if (gameRunning) return; // Don't start if already running
+
+            console.log("Game starting...");
+            gameRunning = true;
+            frameCount = 0;
+            enemies = []; // Clear enemies
+            towers = []; // Clear towers
+            lastTimestamp = performance.now(); // Reset timestamp for accurate timing on start
+
+            // Reset other game state here (lives, score, gold etc.)
+
+            // Cancel any previous loop before starting a new one
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+
+            animationFrameId = requestAnimationFrame(gameLoop); // Start the game loop
+        }
+
+         function stopGame() {
+              console.log("Game stopping...");
+              gameRunning = false;
+              if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+              }
+         }
+
+
+        // --- Initial setup ---
+        setupGame();
+        // Now you can manually call startGame() from the browser console,
+        // or uncomment the line below to start automatically on load.
+        startGame(); // Automatically start the game when the script loads
+
+    </script>
+
+</body>
+</html>
