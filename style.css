@@ -1,0 +1,231 @@
+/* style.css - Themes, Animations, Loader */
+
+/* --- Color Variables --- */
+:root {
+    /* Shared Variables */
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+    --animation-speed: 0.5s;
+    --theme-transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
+
+    /* Brand Colors (can be used in both modes) */
+    --google-blue: #4285F4;
+    --github-brand: #ffffff; /* White for GitHub icon glyph */
+    --youtube-red: #FF0000;
+    --uiverse-purple: #8a63d2;
+    --dribbble-pink: #ea4c89;
+    --mdn-brand: #ffffff; /* White for MDN icon glyph */
+    --webgames-green: #4CAF50; /* Color for Web Games */
+
+    /* Default to Dark Mode Variables */
+    --bg-color: #1a1d24;
+    --card-bg: #252a34;
+    --card-hover-bg: #313846;
+    --icon-bg: #313846;
+    --text-color: #e0e0e0;
+    --text-light: #aaaaaa;
+    --heading-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-hover-color: rgba(0, 0, 0, 0.5);
+    --toggle-bg: #313846;
+    --toggle-icon-color: #f1c40f; /* Sun color */
+    --github-icon-bg: rgba(40, 40, 40, 0.8);
+    --mdn-icon-bg: rgba(30, 30, 30, 0.8);
+}
+
+/* --- Light Mode Variables --- */
+body.light-mode {
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --card-hover-bg: #f0f0f0;
+    --icon-bg: #e9ecef;
+    --text-color: #333333;
+    --text-light: #555555;
+    --heading-color: #1a1d24;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --shadow-hover-color: rgba(0, 0, 0, 0.15);
+    --toggle-bg: #e9ecef;
+    --toggle-icon-color: #1a1d24; /* Moon color */
+    --github-icon-bg: rgba(230, 230, 230, 0.8);
+    --mdn-icon-bg: rgba(235, 235, 235, 0.8);
+}
+
+/* --- Base Styles & Transitions --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px 80px; /* Add padding bottom for toggle */
+    overflow-x: hidden;
+    transition: var(--theme-transition); /* Apply transition to body */
+}
+
+.container {
+    max-width: 960px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 40px;
+    color: var(--heading-color);
+    font-weight: 600;
+    transition: color var(--transition-speed) ease;
+}
+
+/* --- Entrance Animation --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Link Grid & Cards --- */
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.link-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 10px var(--shadow-color);
+    overflow: hidden;
+    opacity: 0; /* Start hidden for animation */
+    animation: fadeInUp var(--animation-speed) ease-out forwards;
+    transition: transform var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease,
+                var(--theme-transition); /* Add theme transition */
+
+    /* Stagger animation delay */
+    &:nth-child(1) { animation-delay: 0.1s; }
+    &:nth-child(2) { animation-delay: 0.15s; }
+    /* Add more if needed */
+}
+
+.link-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px var(--shadow-hover-color);
+    background-color: var(--card-hover-bg);
+}
+
+.link-card a {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 1.1em;
+    text-align: left;
+    width: 100%;
+    transition: color var(--transition-speed) ease;
+}
+
+.link-card:hover a {
+    color: var(--text-color); /* Brighter text on card hover */
+}
+
+.card-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    border-radius: 10px;
+    font-size: 1.3em;
+    font-weight: bold;
+    background-color: var(--icon-bg);
+    color: var(--text-color); /* Default icon glyph color */
+    flex-shrink: 0;
+    transition: transform var(--transition-speed) ease,
+                var(--theme-transition); /* Theme transition for icon */
+}
+
+.link-card:hover .card-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.card-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor; /* Inherit color from parent */
+}
+
+/* --- Specific Card Styles --- */
+
+/* GitHub */
+.card-github .card-icon { color: var(--github-brand); background-color: var(--github-icon-bg); } /* Use variable BG */
+.card-github:hover .card-icon { background-color: rgba(50, 50, 50, 0.9); } /* Slightly darker explicit hover */
+body.light-mode .card-github:hover .card-icon { background-color: rgba(210, 210, 210, 0.9); } /* Light mode hover */
+.card-github:hover a { color: var(--text-color); } /* Keep text standard bright on hover */
+
+/* Web Games (NEW) */
+.card-webgames .card-icon { color: var(--webgames-green); background-color: rgba(76, 175, 80, 0.15); }
+.card-webgames:hover .card-icon { background-color: rgba(76, 175, 80, 0.3); }
+.card-webgames:hover a { color: var(--webgames-green); }
+
+
+/* --- Theme Toggle Button --- */
+#theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--toggle-bg);
+    color: var(--toggle-icon-color);
+    font-size: 24px; /* Adjust icon size */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: var(--theme-transition), transform 0.2s ease;
+    z-index: 1000;
+    overflow: hidden; /* Hide the icon that is not active */
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+#theme-toggle .sun-icon,
+#theme-toggle .moon-icon {
+    position: absolute; /* Position icons on top of each other */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Dark mode active: show moon, hide sun */
+body.dark-mode #theme-toggle .sun-icon {
+    opacity: 0;
+    transform: translateY(10px);
+}
+body.dark-mode #theme-toggle .moon-icon {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Light mode active: show sun, hide moon */
+body.light-mode #theme-toggle .sun-icon {
+    opacity: 1;
+    transform: translateY(0);
+}
+body.light-mode #theme-toggle .moon-icon {
+    opacity: 0;
+    transform: translateY(-10px);
+}
