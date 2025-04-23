@@ -1,0 +1,389 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0; /* Light gray text */
+    background-color: #1a1a1a; /* Very dark gray background */
+    font-weight: 300;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: #00bcd4; /* Default link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+     color: #f5f5f5; /* Lighter headings by default */
+}
+
+/* Header */
+header {
+    background-color: #111; /* Even darker header */
+    padding: 1rem 0;
+    border-bottom: 1px solid #333; /* Subtle border */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00bcd4; /* Accent color (cyan/teal) */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #cccccc;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+    color: #00bcd4; /* Accent color on hover */
+    text-decoration: none; /* Remove underline for nav links */
+}
+
+/* Hero Section */
+.hero {
+    /* Using a subtle dark gradient instead of an image for simplicity */
+    background: linear-gradient(rgba(20, 20, 20, 0.9), rgba(30, 30, 30, 0.98));
+    color: #fff;
+    padding: 6rem 0;
+    text-align: center;
+    min-height: 50vh; /* Adjusted height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero h1 {
+    font-size: 3.2rem; /* Adjusted size */
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.hero h2 {
+    font-size: 1.7rem; /* Adjusted size */
+    margin-bottom: 1rem;
+    font-weight: 300;
+    color: #e0e0e0;
+}
+
+.hero .tagline {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+    color: #bdbdbd;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #00bcd4; /* Accent color */
+    color: #111; /* Dark text on accent button */
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 700;
+    margin: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: 2px solid #00bcd4; /* Ensure border exists for consistency */
+}
+
+.cta-button:hover {
+    background-color: #00acc1; /* Slightly darker accent */
+    border-color: #00acc1;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    border: 2px solid #00bcd4;
+    color: #00bcd4;
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(0, 188, 212, 0.1); /* Subtle accent background on hover */
+    color: #1ad6ed;
+    border-color: #1ad6ed;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+
+/* Content Sections */
+.content-section {
+    padding: 4rem 0;
+}
+
+.content-section.alt-bg {
+    background-color: #222; /* Slightly lighter dark for contrast */
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: #f5f5f5;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.content-section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #00bcd4; /* Accent color */
+    margin: 0.5rem auto 0;
+}
+
+.content-section h3 {
+    font-size: 1.6rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #e0e0e0;
+}
+
+.content-section p {
+    margin-bottom: 1rem;
+    max-width: 800px; /* Improve readability */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; /* Centered text for sections */
+     hyphens: auto;
+     color: #bdbdbd; /* Slightly muted paragraph text */
+}
+
+.content-section ul {
+    list-style: none; /* Remove default list style */
+    padding-left: 0; /* Remove default padding */
+    margin-bottom: 1rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.content-section ul li {
+    margin-bottom: 0.8rem; /* Spacing for list items */
+    padding-left: 1.5em; /* Indentation for list items */
+    position: relative; /* For custom bullet */
+    text-align: left; /* Align list text left */
+}
+
+/* Custom bullet point using pseudo-element */
+.content-section ul li::before {
+     content: '»'; /* Using a character as a bullet */
+     position: absolute;
+     left: 0;
+     color: #00bcd4; /* Accent color bullet */
+     font-weight: bold;
+}
+
+/* Specificity for links within content list */
+.content-section ul li a {
+    color: #00bcd4;
+    font-weight: 400;
+}
+.content-section ul li a:hover {
+    color: #1ad6ed;
+    text-decoration: underline;
+}
+
+
+/* Project Grid */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* Project Card Styling */
+.project-card {
+    background-color: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 188, 212, 0.1);
+    border-color: #444;
+}
+
+.card-link-wrapper {
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+    display: block;
+}
+
+
+.project-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00bcd4; /* Accent color for project titles */
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.project-card p {
+    font-size: 0.95rem;
+    color: #bdbdbd;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    line-height: 1.5;
+    text-align: left; /* Card text aligned left */
+    hyphens: none;
+     max-width: none; /* Override content section max-width */
+     margin-left: 0;
+     margin-right: 0;
+}
+
+/* Tags */
+.project-tags {
+    margin-top: auto;
+    margin-bottom: 1rem; /* Space before the button if button is inside wrapper */
+    padding-left: 1.5rem; /* Align with card content padding */
+     padding-right: 1.5rem;
+}
+
+.project-tags span {
+    display: inline-block;
+    background-color: #333;
+    color: #aaa;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-weight: 400;
+}
+
+/* Card Button/Link */
+.card-button {
+    display: block;
+    background-color: #333;
+    color: #00bcd4;
+    text-align: center;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-top: 1px solid #444;
+}
+
+.card-button:hover {
+    background-color: #00bcd4;
+    color: #111;
+    text-decoration: none;
+}
+
+
+/* Footer */
+footer {
+    background-color: #111;
+    color: #aaa;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid #333;
+    font-size: 0.9em;
+}
+
+footer p {
+    margin-bottom: 0.3rem;
+    color: #aaa; /* Ensure footer text color */
+}
+
+footer a {
+    color: #00bcd4;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem; /* Adjust for smaller screens */
+    }
+    .hero h2 {
+        font-size: 1.4rem; /* Adjust for smaller screens */
+    }
+    header .container {
+        flex-direction: column;
+        align-items: center; /* Center items in column */
+    }
+    nav {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        align-items: center; /* Center nav items */
+    }
+    nav ul li {
+        margin: 0.5rem 0;
+        text-align: center; /* Center nav text */
+        margin-left: 0; /* Reset margin */
+    }
+    .content-section h2 {
+        font-size: 2rem;
+    }
+    .content-section p, .content-section ul {
+        text-align: left; /* Switch to left align on smaller screens for readability */
+    }
+}

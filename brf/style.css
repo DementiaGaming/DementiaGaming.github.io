@@ -1,0 +1,334 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0; /* Light gray text */
+    background-color: #1a1a1a; /* Very dark gray background */
+    font-weight: 300;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background-color: #111; /* Even darker header */
+    padding: 1rem 0;
+    border-bottom: 1px solid #333; /* Subtle border */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00bcd4; /* Accent color (cyan/teal) */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #cccccc;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+    color: #00bcd4; /* Accent color on hover */
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.95)), url('https://source.unsplash.com/random/1600x900/?abstract,technology,dark') no-repeat center center/cover; /* Placeholder abstract background */
+    color: #fff;
+    padding: 6rem 0;
+    text-align: center;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.hero h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+    color: #e0e0e0;
+}
+
+.hero .tagline {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+    color: #bdbdbd;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #00bcd4; /* Accent color */
+    color: #111; /* Dark text on accent button */
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 700;
+    margin: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cta-button:hover {
+    background-color: #00acc1; /* Slightly darker accent */
+    transform: translateY(-2px);
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    border: 2px solid #00bcd4;
+    color: #00bcd4;
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(0, 188, 212, 0.1); /* Subtle accent background on hover */
+    color: #1ad6ed;
+     transform: translateY(-2px);
+}
+
+
+/* Content Sections */
+.content-section {
+    padding: 4rem 0;
+}
+
+.content-section.alt-bg {
+    background-color: #222; /* Slightly lighter dark for contrast */
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: #f5f5f5;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+/* Optional: Add an underline effect for headings */
+.content-section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #00bcd4; /* Accent color */
+    margin: 0.5rem auto 0;
+}
+
+
+.content-section h3 {
+    font-size: 1.6rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #e0e0e0;
+}
+
+.content-section p {
+    margin-bottom: 1rem;
+    max-width: 800px; /* Improve readability */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: justify; /* Justify text for a more formal look */
+     hyphens: auto; /* Improve justification */
+}
+
+.content-section ul {
+    list-style: disc;
+    margin-left: 20px;
+    margin-bottom: 1rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Table Styling */
+.table-container {
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+    margin-top: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    background-color: #2a2a2a; /* Darker table background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #444; /* Darker border */
+}
+
+th {
+    background-color: #333; /* Dark header */
+    font-weight: 700;
+    color: #f0f0f0;
+}
+
+td code {
+    background-color: #3a3a3a;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00bcd4; /* Accent color for inline code */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #252525; /* Slightly different shade for even rows */
+}
+
+tbody tr:hover {
+    background-color: #383838; /* Hover effect */
+}
+
+/* Code Examples */
+.example {
+    margin-bottom: 2.5rem;
+    background-color: #252525;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.example h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #00bcd4; /* Accent color for example titles */
+}
+
+.example p {
+    text-align: left; /* Override justified text for descriptions */
+    max-width: none;
+    margin-bottom: 1rem;
+     hyphens: none;
+}
+.example p em {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+
+pre {
+    background-color: #1e1e1e; /* Very dark background for code */
+    color: #d4d4d4; /* Light text for code */
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto; /* Handle long code lines */
+    border: 1px solid #333;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em; /* Slightly smaller code font */
+}
+
+code.language-brainrotfuck {
+    display: block;
+    white-space: pre;
+}
+
+/* Style comments differently - basic example */
+code.language-brainrotfuck .comment {
+    color: #6a9955; /* Greenish for comments */
+    font-style: italic;
+}
+
+/* Footer */
+footer {
+    background-color: #111; /* Match header */
+    color: #aaa;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid #333; /* Subtle border */
+    font-size: 0.9em;
+}
+
+footer p {
+    margin-bottom: 0.3rem;
+}
+
+footer a {
+    color: #00bcd4; /* Accent color for links */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+    .hero h2 {
+        font-size: 1.5rem;
+    }
+    header .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    nav {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    nav ul li {
+        margin: 0.5rem 0;
+        text-align: left;
+    }
+    .content-section h2 {
+        font-size: 2rem;
+    }
+}
