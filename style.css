@@ -246,11 +246,12 @@ nav ul li a:focus {
     background-color: #2a2a2a;
     border: 1px solid #333;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: hidden; /* Added for potential badge clipping */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative; /* Added for absolute positioning of badges */
 }
 
 .project-card:hover {
@@ -267,6 +268,9 @@ nav ul li a:focus {
     display: block;
 }
 
+.project-card .card-link-wrapper:hover {
+    text-decoration: none; /* Prevent underline on hover */
+}
 
 .project-card h3 {
     font-size: 1.4rem;
@@ -309,9 +313,9 @@ nav ul li a:focus {
     font-weight: 400;
 }
 
-/* Card Button/Link */
+/* --- Original/Base Card Button Style (For Single Buttons) --- */
 .card-button {
-    display: block;
+    display: block; /* Ensures single buttons take full width */
     background-color: #333;
     color: #00bcd4;
     text-align: center;
@@ -319,7 +323,7 @@ nav ul li a:focus {
     text-decoration: none;
     font-weight: 700;
     transition: background-color 0.3s ease, color 0.3s ease;
-    border-top: 1px solid #444;
+    border-top: 1px solid #444; /* Top border for single buttons */
 }
 
 .card-button:hover {
@@ -327,6 +331,47 @@ nav ul li a:focus {
     color: #111;
     text-decoration: none;
 }
+
+/* --- START: Styles SPECIFICALLY for Side-by-Side Buttons --- */
+
+/* Style the container that HOLDS multiple buttons */
+.card-button-container {
+    display: flex; /* Arrange items (buttons) in a row */
+    border-top: 1px solid #444; /* Apply the top border to the container itself */
+}
+
+/* Style buttons ONLY WHEN they are INSIDE the container */
+.card-button-container .card-button {
+    /* Override/adjust base styles for flex layout */
+    display: inline-block; /* Override display: block */
+    flex-grow: 1;         /* Make buttons share the space equally */
+    flex-basis: 0;        /* Helps flex-grow work reliably */
+    border-top: none;     /* Remove top border, container has it now */
+
+    /* Add a subtle separator ONLY between buttons inside the container */
+    border-left: 1px solid #444;
+}
+
+/* Remove the left border from the very first button INSIDE the container */
+.card-button-container .card-button:first-child {
+    border-left: none;
+}
+
+/* --- Specific styling for releasing-soon buttons WITHIN the container --- */
+.project-card.releasing-soon .card-button-container .card-button {
+    /* Style ALL buttons in a releasing-soon card's container as disabled */
+    background-color: #555; /* Darker gray */
+    color: #aaa;         /* Lighter gray text */
+    cursor: not-allowed;
+    pointer-events: none; /* Make them truly unclickable */
+}
+
+.project-card.releasing-soon .card-button-container .card-button:hover {
+    /* Prevent hover styles on disabled buttons inside the container */
+    background-color: #555;
+    color: #aaa;
+}
+/* --- END: Styles SPECIFICALLY for Side-by-Side Buttons --- */
 
 
 /* Footer */
@@ -387,3 +432,94 @@ footer a:hover {
         text-align: left; /* Switch to left align on smaller screens for readability */
     }
 }
+
+
+/* --- START: Added Card Style Variations --- */
+
+/* Style for NEW cards */
+.project-card.new {
+    border-left: 5px solid #4CAF50; /* Green indicator border */
+    /* Optional background tint: background-color: rgba(76, 175, 80, 0.05); */
+}
+
+/* Optional: Add a 'NEW' badge to the corner for NEW cards */
+.project-card.new::after {
+    content: 'NEW!';
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: -30px; /* Adjust as needed */
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 4px 35px; /* Adjust padding for text size and rotation */
+    font-size: 0.85em;
+    font-weight: bold;
+    text-align: center;
+    transform: rotate(45deg); /* Rotate the badge */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2; /* Ensure badge is above other content */
+    line-height: 1.2; /* Adjust line-height for better vertical centering */
+}
+
+
+/* Style for RELEASING SOON cards */
+.project-card.releasing-soon {
+    border-left: 5px solid #ff9800; /* Orange indicator border */
+    opacity: 0.9; /* Make it slightly faded */
+    /* Optional background tint: background-color: rgba(255, 152, 0, 0.05); */
+}
+
+/* Optional: Add a 'SOON' badge for RELEASING SOON cards */
+.project-card.releasing-soon::after {
+    content: 'SOON';
+    position: absolute;
+    top: 10px;
+    right: -30px;
+    background-color: #ff9800; /* Orange */
+    color: white;
+    padding: 4px 35px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-align: center;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    line-height: 1.2;
+}
+
+/* Style the button within RELEASING SOON cards */
+.project-card.releasing-soon .card-button {
+    background-color: #555; /* Darker gray */
+    color: #aaa; /* Lighter gray text */
+    cursor: not-allowed; /* Indicate it's not clickable */
+}
+.project-card.releasing-soon .card-button:hover {
+    background-color: #555; /* Keep same color on hover */
+    color: #aaa;
+}
+
+
+/* Style for UPDATE cards */
+.project-card.update {
+    border-left: 5px solid #2196F3; /* Blue indicator border */
+    /* Optional background tint: background-color: rgba(33, 150, 243, 0.05); */
+}
+
+/* Optional: Add an 'UPDATE' badge for UPDATE cards */
+.project-card.update::after {
+    content: 'UPDATED';
+    position: absolute;
+    top: 20px;
+    right: -30px; /* Adjust based on text length */
+    background-color: #2196F3; /* Blue */
+    color: white;
+    padding: 4px 40px; /* Adjust padding */
+    font-size: 0.85em;
+    font-weight: bold;
+    text-align: center;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    line-height: 1.2;
+}
+
+/* --- END: Added Card Style Variations --- */
